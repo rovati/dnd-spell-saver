@@ -10,8 +10,9 @@ class ValueRadioTile extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         width: _width,
         decoration: BoxDecoration(
+          color: Colors.white,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(width: 2, color: Colors.grey),
+          border: Border.all(width: 2, color: Colors.transparent),
         ),
         child: Center(
           child: Text(

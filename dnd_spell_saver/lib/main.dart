@@ -15,8 +15,18 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'DnD Spell Saver',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 112, 160, 233)),
+        colorScheme: const ColorScheme(
+            brightness: Brightness.dark,
+            primary: Color.fromARGB(255, 124, 168, 235),
+            onPrimary: Colors.white,
+            secondary: Color.fromARGB(255, 255, 255, 255),
+            onSecondary: Color.fromARGB(255, 104, 104, 104),
+            error: Color.fromARGB(255, 196, 49, 49),
+            onError: Colors.white,
+            background: Color.fromARGB(255, 238, 238, 238),
+            onBackground: Color.fromARGB(255, 100, 100, 100),
+            surface: Color.fromARGB(255, 124, 168, 235),
+            onSurface: Colors.white),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),

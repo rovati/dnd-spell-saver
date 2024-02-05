@@ -34,21 +34,36 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            SizedBox(
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.white,
+              ),
               width: 500,
               child: TextField(
                 decoration: const InputDecoration(
                   hintText: "TITOLO",
+                  hintStyle: TextStyle(color: Colors.grey),
+                  border: InputBorder.none,
                 ),
                 controller: _titleController,
                 textAlign: TextAlign.center,
+                style: const TextStyle(
+                  decoration: TextDecoration.none,
+                ),
               ),
             ),
-            SizedBox(
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.white,
+              ),
               width: 500,
               child: TextField(
                 decoration: const InputDecoration(
                   hintText: "TITOLO INGLESE",
+                  hintStyle: TextStyle(color: Colors.grey),
+                  border: InputBorder.none,
                 ),
                 controller: _enTitleController,
                 textAlign: TextAlign.center,
@@ -319,14 +334,22 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Container(
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey, width: 2),
                 borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
               ),
               width: MediaQuery.of(context).size.width * 0.7,
-              child: const TextField(
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                minLines: 10,
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: TextField(
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  minLines: 10,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "Corpo",
+                    hintStyle: TextStyle(color: Colors.grey),
+                  ),
+                ),
               ),
             ),
             SizedBox(
@@ -337,14 +360,22 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Container(
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey, width: 2),
                 borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
               ),
               width: MediaQuery.of(context).size.width * 0.7,
-              child: const TextField(
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                minLines: 3,
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: TextField(
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  minLines: 3,
+                  decoration: InputDecoration(
+                    hintText: "Ai livelli più alti...",
+                    hintStyle: TextStyle(color: Colors.grey),
+                    border: InputBorder.none,
+                  ),
+                ),
               ),
             ),
             TextButton(
