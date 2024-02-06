@@ -5,7 +5,7 @@ enum Component {
 
   const Component(this.label);
   final String label;
-  final String hint = "materiale";
+  static const String hint = "materiale";
 
   @override
   String toString() => label.toUpperCase();

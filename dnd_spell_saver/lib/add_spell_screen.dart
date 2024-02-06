@@ -1,10 +1,13 @@
 import 'package:dnd_spell_saver/value/area_of_effect.dart';
 import 'package:dnd_spell_saver/value/casting_time.dart';
 import 'package:dnd_spell_saver/value/components.dart';
+import 'package:dnd_spell_saver/value/duration.dart';
+import 'package:dnd_spell_saver/value/range.dart';
 import 'package:dnd_spell_saver/value/saving_throw.dart';
+import 'package:dnd_spell_saver/widget/multi_choice_radio.dart';
 import 'package:dnd_spell_saver/widget/simple_radio.dart';
-import 'package:dnd_spell_saver/widget/simple_radio_tile.dart';
-import 'package:dnd_spell_saver/widget/value_radio_button.dart';
+import 'package:dnd_spell_saver/widget/simple_radio_with_value.dart';
+import 'package:dnd_spell_saver/widget/value_radio.dart';
 import 'package:flutter/material.dart';
 
 import 'value/level.dart';
@@ -30,8 +33,11 @@ class _AddSpellPageState extends State<AddSpellPage> {
   bool _concentration = false;
   bool _ritual = false;
   CastingTime? _castingTime;
-  String? _range;
-  String? _duration;
+  String? _strCastingTime;
+  Range? _range;
+  String? _strRange;
+  Duration? _duration;
+  String? _strDuration;
   List<Component> _components = [];
   String? _material;
   AreaOfEffect? _area;
@@ -269,148 +275,149 @@ class _AddSpellPageState extends State<AddSpellPage> {
                         ),
                       ),
                       // tempo lancio
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 5),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               width: 125,
                               child: Text(
                                 "TEMPO DI LANCIO:",
                                 textAlign: TextAlign.right,
                               ),
                             ),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  SimpleRadioTile("AZIONE", 90),
-                                  SimpleRadioTile("BONUS", 90),
-                                  SimpleRadioTile("REAZIONE", 90),
-                                  ValueRadioTile("tempo", 90),
-                                ],
-                              ),
+                            SimpleRadioWithValue<CastingTime>(
+                              labels: CastingTime.values,
+                              tileWidth: 90,
+                              hint: CastingTime.hint,
+                              selectionCallback: (val) {
+                                _castingTime = val;
+                              },
+                              valueCallback: (strVal) {
+                                _strCastingTime = strVal;
+                              },
                             ),
                           ],
                         ),
                       ),
                       // gittata
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 5),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               width: 125,
                               child: Text(
                                 "GITTATA:",
                                 textAlign: TextAlign.right,
                               ),
                             ),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  SimpleRadioTile("INCANTATORE", 150),
-                                  ValueRadioTile("gittata", 150),
-                                ],
-                              ),
+                            SimpleRadioWithValue<Range>(
+                              labels: Range.values,
+                              tileWidth: 150,
+                              hint: Range.hint,
+                              selectionCallback: (val) {
+                                _range = val;
+                              },
+                              valueCallback: (strVal) {
+                                _strRange = strVal;
+                              },
+                              compact: true,
                             ),
                           ],
                         ),
                       ),
                       // durata
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 5),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               width: 125,
                               child: Text(
                                 "DURATA:",
                                 textAlign: TextAlign.right,
                               ),
                             ),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  SimpleRadioTile("ISTANTANEO", 150),
-                                  ValueRadioTile("durata", 150),
-                                ],
-                              ),
+                            SimpleRadioWithValue<Duration>(
+                              labels: Duration.values,
+                              tileWidth: 150,
+                              hint: Duration.hint,
+                              selectionCallback: (val) {
+                                _duration = val;
+                              },
+                              valueCallback: (strVal) {
+                                _strDuration = strVal;
+                              },
+                              compact: true,
                             ),
                           ],
                         ),
                       ),
                       // componenti
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 5),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               width: 125,
                               child: Text(
                                 "COMPONENTI:",
                                 textAlign: TextAlign.right,
                               ),
                             ),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  SimpleRadioTile("V", 30),
-                                  SimpleRadioTile("S", 30),
-                                  SimpleRadioTile("M", 30),
-                                  Expanded(
-                                    child: ValueRadioTile("materiale", 300),
-                                  ),
-                                ],
-                              ),
+                            MultiChoiceRadio(
+                              labels: Component.values,
+                              tileWidth: 30,
+                              hint: Component.hint,
+                              selectionCallback: (val) {
+                                _components.add(val);
+                              },
+                              deselectionCallback: (val) {
+                                _components.remove(val);
+                              },
+                              valueCallback: (strVal) {
+                                _material = strVal;
+                              },
+                              valueBound: const [Component.material],
+                              valueTileWidth: 370,
                             ),
                           ],
                         ),
                       ),
                       // area
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 5),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               width: 125,
                               child: Text(
                                 "AREA:",
                                 textAlign: TextAlign.right,
                               ),
                             ),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  SimpleRadioTile("NO", 40),
-                                  SimpleRadioTile("CUBO", 70),
-                                  SimpleRadioTile("CERCHIO", 70),
-                                  SimpleRadioTile("SFERA", 70),
-                                  SimpleRadioTile("CONO", 70),
-                                  ValueRadioTile("dim.", 100),
-                                ],
-                              ),
+                            ValueRadio<AreaOfEffect>(
+                              labels: AreaOfEffect.values,
+                              tileWidth: 70,
+                              valueTileWidth: 100,
+                              hint: AreaOfEffect.hint,
+                              selectionCallback: (val) {
+                                _area = val;
+                              },
+                              valueCallback: (strVal) {
+                                _dimAoE = strVal;
+                              },
                             ),
                           ],
                         ),
@@ -500,7 +507,9 @@ class _AddSpellPageState extends State<AddSpellPage> {
                             SizedBox(
                               width: 170,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  print("Click!");
+                                },
                                 child: const Text(
                                   "AGGIUNGI",
                                   style: TextStyle(color: Colors.white),
@@ -513,7 +522,9 @@ class _AddSpellPageState extends State<AddSpellPage> {
                             SizedBox(
                               width: 170,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  print("Click!");
+                                },
                                 child: const Text(
                                   "ESPORTA CSV",
                                   style: TextStyle(color: Colors.white),

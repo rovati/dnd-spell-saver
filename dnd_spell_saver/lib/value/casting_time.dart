@@ -5,7 +5,7 @@ enum CastingTime {
 
   const CastingTime(this.label);
   final String label;
-  final String hint = "tempo";
+  static const String hint = "tempo";
 
   @override
   String toString() => label.toUpperCase();

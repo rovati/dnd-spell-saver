@@ -6,12 +6,13 @@ class SimpleRadio<T> extends StatefulWidget {
   final bool noTile;
   final void Function(T newVal) selectionCallback;
 
-  const SimpleRadio(
-      {super.key,
-      required this.labels,
-      required this.tileWidth,
-      required this.selectionCallback,
-      this.noTile = false});
+  const SimpleRadio({
+    super.key,
+    required this.labels,
+    required this.tileWidth,
+    required this.selectionCallback,
+    this.noTile = false,
+  });
 
   @override
   State<StatefulWidget> createState() => _SimpleRadioState<T>();
