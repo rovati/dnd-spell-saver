@@ -135,7 +135,7 @@ class _AddSpellPageState extends State<AddSpellPage> {
     );
 
     _spellList!.addSpell(spell);
-    _showSuccessDialog().then(
+    _showSuccessDialog('Incantesimo aggiunto alla lista.').then(
       (value) => Navigator.popAndPushNamed(
         context,
         AddSpellPage.routeName,
@@ -147,20 +147,26 @@ class _AddSpellPageState extends State<AddSpellPage> {
   }
 
   void _exportCsv() {
-    throw UnimplementedError("Not implemented yet.");
+    if (_spellList == null) {
+      _showErrorDialog(<String>['Lista incantesimi non ancora pronta.']);
+    } else {
+      _spellList!
+          .exportToCsv()
+          .then((value) => _showSuccessDialog('Lista incantesimi esportata.'));
+    }
   }
 
-  Future<void> _showSuccessDialog() async {
+  Future<void> _showSuccessDialog(String msg) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('SUCCESSO'),
-          content: const SingleChildScrollView(
+          content: SingleChildScrollView(
             child: ListBody(
               children: [
-                Text('Incantesimo aggiunto alla lista.'),
+                Text(msg),
               ],
             ),
           ),
