@@ -1,3 +1,4 @@
+import 'package:dnd_spell_saver/model/spell_list.dart';
 import 'package:dnd_spell_saver/value/area_of_effect.dart';
 import 'package:dnd_spell_saver/value/casting_time.dart';
 import 'package:dnd_spell_saver/value/components.dart';
@@ -15,7 +16,9 @@ import 'value/school.dart';
 import 'value/source.dart';
 
 class AddSpellPage extends StatefulWidget {
-  const AddSpellPage({super.key});
+  final SpellList spellList;
+
+  const AddSpellPage(this.spellList, {super.key});
 
   @override
   State<AddSpellPage> createState() => _AddSpellPageState();
@@ -38,7 +41,7 @@ class _AddSpellPageState extends State<AddSpellPage> {
   String? _strRange;
   Duration? _duration;
   String? _strDuration;
-  List<Component> _components = [];
+  final List<Component> _components = [];
   String? _material;
   AreaOfEffect? _area;
   String? _dimAoE;

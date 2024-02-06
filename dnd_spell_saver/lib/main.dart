@@ -1,6 +1,5 @@
+import 'package:dnd_spell_saver/main_screen.dart';
 import 'package:flutter/material.dart';
-
-import 'add_spell_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,7 +28,7 @@ class MyApp extends StatelessWidget {
             onSurface: Colors.grey),
         useMaterial3: true,
       ),
-      home: const AddSpellPage(),
+      home: const MainScreen(),
     );
   }
 }
