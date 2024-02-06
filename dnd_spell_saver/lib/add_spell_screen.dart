@@ -1,9 +1,15 @@
+import 'package:dnd_spell_saver/value/area_of_effect.dart';
+import 'package:dnd_spell_saver/value/casting_time.dart';
+import 'package:dnd_spell_saver/value/components.dart';
+import 'package:dnd_spell_saver/value/saving_throw.dart';
+import 'package:dnd_spell_saver/widget/simple_radio.dart';
 import 'package:dnd_spell_saver/widget/simple_radio_tile.dart';
 import 'package:dnd_spell_saver/widget/value_radio_button.dart';
 import 'package:flutter/material.dart';
 
 import 'value/level.dart';
 import 'value/school.dart';
+import 'value/source.dart';
 
 class AddSpellPage extends StatefulWidget {
   const AddSpellPage({super.key});
@@ -18,12 +24,19 @@ class _AddSpellPageState extends State<AddSpellPage> {
   final TextEditingController _schoolController = TextEditingController();
   final TextEditingController _spellLevelController = TextEditingController();
 
-  School? _selectedSchool;
-  SpellLevel? _selectedSpellLevel;
+  Source? _source;
+  SpellLevel? _spellLevel;
+  School? _school;
   bool _concentration = false;
   bool _ritual = false;
-  String? _castingTime;
+  CastingTime? _castingTime;
   String? _range;
+  String? _duration;
+  List<Component> _components = [];
+  String? _material;
+  AreaOfEffect? _area;
+  String? _dimAoE;
+  SavingThrow? _ts;
 
   @override
   Widget build(BuildContext context) {
@@ -95,32 +108,25 @@ class _AddSpellPageState extends State<AddSpellPage> {
                         ),
                       ),
                       // fonte
-                      const Padding(
-                        padding: EdgeInsets.only(top: 15, bottom: 5),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15, bottom: 5),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               width: 125,
                               child: Text(
                                 "FONTE:",
                                 textAlign: TextAlign.right,
                               ),
                             ),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  SimpleRadioTile("PHB", 85),
-                                  SimpleRadioTile("XANATHAR", 85),
-                                  SimpleRadioTile("TASHA", 85),
-                                  SimpleRadioTile("SC", 85),
-                                  SimpleRadioTile("ALTRO", 85),
-                                ],
-                              ),
+                            SimpleRadio<Source>(
+                              labels: Source.values,
+                              tileWidth: 85,
+                              selectionCallback: (val) {
+                                _source = val;
+                              },
                             ),
                           ],
                         ),
@@ -149,7 +155,7 @@ class _AddSpellPageState extends State<AddSpellPage> {
                                 enableSearch: false,
                                 onSelected: (SpellLevel? level) {
                                   setState(() {
-                                    _selectedSpellLevel = level;
+                                    _spellLevel = level;
                                   });
                                 },
                                 inputDecorationTheme:
@@ -167,10 +173,9 @@ class _AddSpellPageState extends State<AddSpellPage> {
                                     value: level,
                                     label: level.label,
                                     style: MenuItemButton.styleFrom(
-                                        foregroundColor:
-                                            level == _selectedSpellLevel
-                                                ? Theme.of(context).primaryColor
-                                                : Colors.grey,
+                                        foregroundColor: level == _spellLevel
+                                            ? Theme.of(context).primaryColor
+                                            : Colors.grey,
                                         backgroundColor: Colors.white),
                                   );
                                 }).toList(),
@@ -194,7 +199,7 @@ class _AddSpellPageState extends State<AddSpellPage> {
                                 enableSearch: false,
                                 onSelected: (School? school) {
                                   setState(() {
-                                    _selectedSchool = school;
+                                    _school = school;
                                   });
                                 },
                                 inputDecorationTheme:
@@ -212,10 +217,9 @@ class _AddSpellPageState extends State<AddSpellPage> {
                                     value: school,
                                     label: school.label,
                                     style: MenuItemButton.styleFrom(
-                                        foregroundColor:
-                                            school == _selectedSchool
-                                                ? Theme.of(context).primaryColor
-                                                : Colors.grey,
+                                        foregroundColor: school == _school
+                                            ? Theme.of(context).primaryColor
+                                            : Colors.grey,
                                         backgroundColor: Colors.white),
                                   );
                                 }).toList(),
@@ -412,34 +416,25 @@ class _AddSpellPageState extends State<AddSpellPage> {
                         ),
                       ),
                       // ts
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 5),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               width: 125,
                               child: Text(
                                 "TIRO SLAVEZZA:",
                                 textAlign: TextAlign.right,
                               ),
                             ),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  SimpleRadioTile("NO", 40),
-                                  SimpleRadioTile("FOR", 60),
-                                  SimpleRadioTile("DES", 60),
-                                  SimpleRadioTile("COS", 60),
-                                  SimpleRadioTile("INT", 60),
-                                  SimpleRadioTile("SAG", 60),
-                                  SimpleRadioTile("CAR", 60),
-                                ],
-                              ),
+                            SimpleRadio<SavingThrow>(
+                              labels: SavingThrow.values,
+                              tileWidth: 60,
+                              selectionCallback: (val) {
+                                _ts = val;
+                              },
                             ),
                           ],
                         ),

@@ -13,7 +13,7 @@ class ValueRadioTile extends StatelessWidget {
           width: _width,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(5),
             border: Border.all(width: 2, color: Colors.transparent),
           ),
           child: Center(

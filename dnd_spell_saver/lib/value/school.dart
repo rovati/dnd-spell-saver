@@ -10,4 +10,7 @@ enum School {
 
   const School(this.label);
   final String label;
+
+  @override
+  String toString() => label.toUpperCase();
 }
