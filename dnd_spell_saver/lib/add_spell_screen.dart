@@ -5,16 +5,14 @@ import 'package:flutter/material.dart';
 import 'value/level.dart';
 import 'value/school.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+class AddSpellPage extends StatefulWidget {
+  const AddSpellPage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<AddSpellPage> createState() => _AddSpellPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _AddSpellPageState extends State<AddSpellPage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _enTitleController = TextEditingController();
   final TextEditingController _schoolController = TextEditingController();
@@ -30,363 +28,463 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.white,
-              ),
-              width: 500,
-              child: TextField(
-                decoration: const InputDecoration(
-                  hintText: "TITOLO",
-                  hintStyle: TextStyle(color: Colors.grey),
-                  border: InputBorder.none,
+      body: DefaultTextStyle.merge(
+        style: const TextStyle(
+          color: Colors.grey,
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              // titolo
+              Padding(
+                padding: const EdgeInsets.only(top: 30),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.white,
+                  ),
+                  width: 500,
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      hintText: "TITOLO",
+                      hintStyle: TextStyle(fontSize: 20, color: Colors.grey),
+                      border: InputBorder.none,
+                    ),
+                    controller: _titleController,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 20, color: Colors.grey),
+                  ),
                 ),
-                controller: _titleController,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  decoration: TextDecoration.none,
+              ),
+              // titolo inglese
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.white,
+                  ),
+                  width: 300,
+                  height: 35,
+                  child: Center(
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        hintText: "TITOLO INGLESE",
+                        hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(vertical: 15),
+                      ),
+                      style: const TextStyle(fontSize: 14, color: Colors.grey),
+                      controller: _enTitleController,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ),
               ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.white,
-              ),
-              width: 500,
-              child: TextField(
-                decoration: const InputDecoration(
-                  hintText: "TITOLO INGLESE",
-                  hintStyle: TextStyle(color: Colors.grey),
-                  border: InputBorder.none,
-                ),
-                controller: _enTitleController,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.7,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    width: 100,
-                    child: Text(
-                      "LIVELLO:",
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-                  DropdownMenu<SpellLevel>(
-                    controller: _spellLevelController,
-                    requestFocusOnTap: true,
-                    onSelected: (SpellLevel? level) {
-                      setState(() {
-                        _selectedSpellLevel = level;
-                      });
-                    },
-                    dropdownMenuEntries: SpellLevel.values
-                        .map<DropdownMenuEntry<SpellLevel>>((SpellLevel level) {
-                      return DropdownMenuEntry<SpellLevel>(
-                        value: level,
-                        label: level.label,
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(
-                    width: 100,
-                    child: Text(
-                      "SCUOLA:",
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-                  DropdownMenu<School>(
-                    controller: _schoolController,
-                    requestFocusOnTap: true,
-                    onSelected: (School? school) {
-                      setState(() {
-                        _selectedSchool = school;
-                      });
-                    },
-                    dropdownMenuEntries: School.values
-                        .map<DropdownMenuEntry<School>>((School school) {
-                      return DropdownMenuEntry<School>(
-                        value: school,
-                        label: school.label,
-                      );
-                    }).toList(),
-                  )
-                ],
-              ),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.5,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    width: 150,
-                    child: Text(
-                      "CONENTRAZIONE:",
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-                  Checkbox(
-                    value: _concentration,
-                    onChanged: (val) {
-                      setState(() {
-                        _concentration = val!;
-                      });
-                    },
-                  ),
-                  const SizedBox(
-                    width: 150,
-                    child: Text(
-                      "RITUALE:",
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-                  Checkbox(
-                    value: _ritual,
-                    onChanged: (val) {
-                      setState(() {
-                        _ritual = val!;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.7,
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  SizedBox(
-                    width: 150,
-                    child: Text(
-                      "CASTING TIME:",
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        SimpleRadioTile("AZIONE", 90),
-                        SimpleRadioTile("BONUS", 90),
-                        SimpleRadioTile("REAZIONE", 90),
-                        ValueRadioTile("tempo", 90),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.7,
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  SizedBox(
-                    width: 150,
-                    child: Text(
-                      "GITTATA:",
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        SimpleRadioTile("INCANTATORE", 150),
-                        ValueRadioTile("gittata", 150),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.7,
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  SizedBox(
-                    width: 150,
-                    child: Text(
-                      "DURATA:",
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        SimpleRadioTile("ISTANTANEO", 150),
-                        ValueRadioTile("durata", 150),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.7,
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  SizedBox(
-                    width: 150,
-                    child: Text(
-                      "COMPONENTI:",
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        SimpleRadioTile("V", 30),
-                        SimpleRadioTile("S", 30),
-                        SimpleRadioTile("M", 30),
-                        Expanded(
-                          child: ValueRadioTile("materiale", 300),
+              // livello scuola
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(
+                        width: 105,
+                        child: Text(
+                          "LIVELLO:",
+                          textAlign: TextAlign.right,
                         ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.7,
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  SizedBox(
-                    width: 150,
-                    child: Text(
-                      "AREA:",
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        SimpleRadioTile("NO", 50),
-                        SimpleRadioTile("CUBO", 70),
-                        SimpleRadioTile("CERCHIO", 70),
-                        SimpleRadioTile("SFERA", 70),
-                        SimpleRadioTile("CONO", 70),
-                        ValueRadioTile("dimensione", 100),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.7,
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  SizedBox(
-                    width: 150,
-                    child: Text(
-                      "TIRO SLAVEZZA:",
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        SimpleRadioTile("NO", 50),
-                        SimpleRadioTile("FOR", 50),
-                        SimpleRadioTile("DES", 50),
-                        SimpleRadioTile("COS", 50),
-                        SimpleRadioTile("INT", 50),
-                        SimpleRadioTile("SAG", 50),
-                        SimpleRadioTile("CAR", 50),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-              ),
-              width: MediaQuery.of(context).size.width * 0.7,
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: TextField(
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  minLines: 10,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Corpo",
-                    hintStyle: TextStyle(color: Colors.grey),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15),
+                        child: DropdownMenu<SpellLevel>(
+                          width: 200,
+                          hintText: "SELEZIONA",
+                          controller: _spellLevelController,
+                          requestFocusOnTap: true,
+                          onSelected: (SpellLevel? level) {
+                            setState(() {
+                              _selectedSpellLevel = level;
+                            });
+                          },
+                          inputDecorationTheme: const InputDecorationTheme(
+                            filled: true,
+                            fillColor: Colors.white,
+                            enabledBorder: InputBorder.none,
+                          ),
+                          textStyle:
+                              const TextStyle(color: Colors.grey, fontSize: 14),
+                          dropdownMenuEntries: SpellLevel.values
+                              .map<DropdownMenuEntry<SpellLevel>>(
+                                  (SpellLevel level) {
+                            return DropdownMenuEntry<SpellLevel>(
+                              value: level,
+                              label: level.label,
+                              style: MenuItemButton.styleFrom(
+                                  foregroundColor: level == _selectedSpellLevel
+                                      ? Colors.white
+                                      : Colors.grey,
+                                  backgroundColor: Colors.white),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 105,
+                        child: Text(
+                          "SCUOLA:",
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15),
+                        child: DropdownMenu<School>(
+                          width: 200,
+                          hintText: "SELEZIONA",
+                          controller: _schoolController,
+                          requestFocusOnTap: true,
+                          onSelected: (School? school) {
+                            setState(() {
+                              _selectedSchool = school;
+                            });
+                          },
+                          inputDecorationTheme: const InputDecorationTheme(
+                            filled: true,
+                            fillColor: Colors.white,
+                            enabledBorder: InputBorder.none,
+                          ),
+                          textStyle:
+                              const TextStyle(color: Colors.grey, fontSize: 14),
+                          dropdownMenuEntries: School.values
+                              .map<DropdownMenuEntry<School>>((School school) {
+                            return DropdownMenuEntry<School>(
+                              value: school,
+                              label: school.label,
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.7,
-              child: const Center(
-                child: Text("AI LIVELLI PIÙ ALTI"),
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-              ),
-              width: MediaQuery.of(context).size.width * 0.7,
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: TextField(
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  minLines: 3,
-                  decoration: InputDecoration(
-                    hintText: "Ai livelli più alti...",
-                    hintStyle: TextStyle(color: Colors.grey),
-                    border: InputBorder.none,
+              // concentrazione, rituale
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(
+                        width: 130,
+                        child: Text(
+                          "CONCENTRAZIONE:",
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
+                      Checkbox(
+                        value: _concentration,
+                        onChanged: (val) {
+                          setState(() {
+                            _concentration = val!;
+                          });
+                        },
+                      ),
+                      const SizedBox(
+                        width: 130,
+                        child: Text(
+                          "RITUALE:",
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
+                      Checkbox(
+                        value: _ritual,
+                        onChanged: (val) {
+                          setState(() {
+                            _ritual = val!;
+                          });
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: const Text("AGGIUNGI"),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: const Text("ESPORTA CSV"),
-            ),
-          ],
+              // tempo lancio
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      SizedBox(
+                        width: 130,
+                        child: Text(
+                          "TEMPO DI LANCIO:",
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            SimpleRadioTile("AZIONE", 90),
+                            SimpleRadioTile("BONUS", 90),
+                            SimpleRadioTile("REAZIONE", 90),
+                            ValueRadioTile("tempo", 90),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // gittata
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      SizedBox(
+                        width: 130,
+                        child: Text(
+                          "GITTATA:",
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            SimpleRadioTile("INCANTATORE", 150),
+                            ValueRadioTile("gittata", 150),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // durata
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      SizedBox(
+                        width: 130,
+                        child: Text(
+                          "DURATA:",
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            SimpleRadioTile("ISTANTANEO", 150),
+                            ValueRadioTile("durata", 150),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // componenti
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      SizedBox(
+                        width: 130,
+                        child: Text(
+                          "COMPONENTI:",
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            SimpleRadioTile("V", 30),
+                            SimpleRadioTile("S", 30),
+                            SimpleRadioTile("M", 30),
+                            Expanded(
+                              child: ValueRadioTile("materiale", 300),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // area
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      SizedBox(
+                        width: 130,
+                        child: Text(
+                          "AREA:",
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            SimpleRadioTile("NO", 40),
+                            SimpleRadioTile("CUBO", 70),
+                            SimpleRadioTile("CERCHIO", 70),
+                            SimpleRadioTile("SFERA", 70),
+                            SimpleRadioTile("CONO", 70),
+                            ValueRadioTile("dim.", 100),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // ts
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      SizedBox(
+                        width: 130,
+                        child: Text(
+                          "TIRO SLAVEZZA:",
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            SimpleRadioTile("NO", 40),
+                            SimpleRadioTile("FOR", 60),
+                            SimpleRadioTile("DES", 60),
+                            SimpleRadioTile("COS", 60),
+                            SimpleRadioTile("INT", 60),
+                            SimpleRadioTile("SAG", 60),
+                            SimpleRadioTile("CAR", 60),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // corpo
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                  ),
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: TextField(
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      minLines: 10,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Corpo",
+                        hintStyle: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: const Center(
+                    child: Text("AI LIVELLI PIÙ ALTI"),
+                  ),
+                ),
+              ),
+              // livelli alti
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                ),
+                width: MediaQuery.of(context).size.width * 0.7,
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: TextField(
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    minLines: 3,
+                    decoration: InputDecoration(
+                      hintText: "Ai livelli più alti...",
+                      hintStyle: TextStyle(color: Colors.grey),
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+              ),
+              // aggiungi
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: const Text(
+                    "AGGIUNGI",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+              // esporta
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: const Text(
+                    "ESPORTA CSV",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
