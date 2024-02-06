@@ -1,4 +1,6 @@
+import 'package:dnd_spell_saver/model/spell.dart';
 import 'package:dnd_spell_saver/model/spell_list.dart';
+import 'package:dnd_spell_saver/util/screen_args.dart';
 import 'package:dnd_spell_saver/value/area_of_effect.dart';
 import 'package:dnd_spell_saver/value/casting_time.dart';
 import 'package:dnd_spell_saver/value/components.dart';
@@ -16,19 +18,23 @@ import 'value/school.dart';
 import 'value/source.dart';
 
 class AddSpellPage extends StatefulWidget {
-  final SpellList spellList;
+  static const routeName = '/addspell';
 
-  const AddSpellPage(this.spellList, {super.key});
+  const AddSpellPage({super.key});
 
   @override
   State<AddSpellPage> createState() => _AddSpellPageState();
 }
 
 class _AddSpellPageState extends State<AddSpellPage> {
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _enTitleController = TextEditingController();
-  final TextEditingController _schoolController = TextEditingController();
-  final TextEditingController _spellLevelController = TextEditingController();
+  SpellList? _spellList;
+
+  final _titleController = TextEditingController();
+  final _enTitleController = TextEditingController();
+  final _schoolController = TextEditingController();
+  final _spellLevelController = TextEditingController();
+  final _bodyController = TextEditingController();
+  final _higherLevelsController = TextEditingController();
 
   Source? _source;
   SpellLevel? _spellLevel;
@@ -45,10 +51,168 @@ class _AddSpellPageState extends State<AddSpellPage> {
   String? _material;
   AreaOfEffect? _area;
   String? _dimAoE;
-  SavingThrow? _ts;
+  SavingThrow? _savingThrow;
+
+  void _addSpell() {
+    // TODO validation
+    List<String> errorFields = [];
+
+    if (_titleController.value.text.isEmpty) {
+      errorFields.add('\'TITOLO\' è vuoto.');
+    }
+    if (_enTitleController.value.text.isEmpty) {
+      errorFields.add('\'TITOLO ENG\' è vuoto.');
+    }
+    if (_source == null) {
+      errorFields.add('\'FONTE\' non è selezionato.');
+    }
+    if (_spellLevel == null) {
+      errorFields.add('\'LIVELLO\' non è selezionato.');
+    }
+    if (_school == null) {
+      errorFields.add('\'SCUOLA\' non è selezionato.');
+    }
+    if (_castingTime == null && _strCastingTime == null) {
+      errorFields.add('\'TEMPO DI LANCIO\' non è selezionato.');
+    } else if (_castingTime == null && _strCastingTime!.isEmpty) {
+      errorFields.add(
+          '\'TEMPO DI LANCIO\' ha un valore non default, ma il valore è vuoto.');
+    }
+    if (_range == null && _strRange == null) {
+      errorFields.add('\'GITTATA\' non è selezionato.');
+    } else if (_range == null && _strRange!.isEmpty) {
+      errorFields
+          .add('\'GITTATA\' ha un valore non default, ma il valore è vuoto.');
+    }
+    if (_duration == null && _strDuration == null) {
+      errorFields.add('\'DURATA\' non è selezionato.');
+    } else if (_duration == null && _strDuration!.isEmpty) {
+      errorFields
+          .add('\'DURATA\' ha un valore non default, ma il valore è vuoto.');
+    }
+    if (_components.contains(Component.material) &&
+        (_material == null || _material!.isEmpty)) {
+      errorFields
+          .add('\'COMPONENTI\' contiene Materiale ma non specifica quale.');
+    }
+    if (_area == null) {
+      errorFields.add('\'AREA\' non è selezionato.');
+    } else if (_area != AreaOfEffect.none &&
+        (_dimAoE == null || _dimAoE!.isEmpty)) {
+      errorFields
+          .add('\'AREA\' ha un tipo di area ma non specifica la dimensione.');
+    }
+    if (_savingThrow == null) {
+      errorFields.add('\'TIRO SLAVEZZA\' non è selezionato.');
+    }
+    if (_bodyController.value.text.isEmpty) {
+      errorFields.add('\'DESCRIZIONE\' è vuoto.');
+    }
+
+    if (errorFields.isNotEmpty) {
+      _showErrorDialog(errorFields);
+      return;
+    }
+
+    var spell = Spell(
+      _titleController.value.text,
+      _enTitleController.value.text,
+      _source!,
+      _spellLevel!,
+      _school!,
+      _concentration,
+      _ritual,
+      _castingTime != null ? _castingTime!.label : _strCastingTime!,
+      _range != null ? _range!.label : _strRange!,
+      _duration != null ? _duration!.label : _strDuration!,
+      _components,
+      _material ?? "",
+      _area!,
+      _dimAoE ?? "",
+      _savingThrow!,
+      _bodyController.value.text,
+      _higherLevelsController.value.text,
+    );
+
+    _spellList!.addSpell(spell);
+    _showSuccessDialog().then(
+      (value) => Navigator.popAndPushNamed(
+        context,
+        AddSpellPage.routeName,
+        arguments: ScreenArguments(
+          _spellList!,
+        ),
+      ),
+    );
+  }
+
+  void _exportCsv() {
+    throw UnimplementedError("Not implemented yet.");
+  }
+
+  Future<void> _showSuccessDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('SUCCESSO'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: [
+                Text('Incantesimo aggiunto alla lista.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('PROSSIMO'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+          backgroundColor: Colors.white,
+        );
+      },
+    );
+  }
+
+  Future<void> _showErrorDialog(List<String> errorFields) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Errore di validazione'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: (['I seguenti campi contengono errori:'] + errorFields)
+                  .map((msg) => Text(msg))
+                  .toList(),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('CHIUDI'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+          backgroundColor: Colors.white,
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as ScreenArguments;
+    setState(() {
+      _spellList = args.spellList;
+    });
+
     return Scaffold(
       body: DefaultTextStyle.merge(
         style: const TextStyle(
@@ -443,7 +607,7 @@ class _AddSpellPageState extends State<AddSpellPage> {
                               labels: SavingThrow.values,
                               tileWidth: 60,
                               selectionCallback: (val) {
-                                _ts = val;
+                                _savingThrow = val;
                               },
                             ),
                           ],
@@ -457,15 +621,16 @@ class _AddSpellPageState extends State<AddSpellPage> {
                             borderRadius: BorderRadius.circular(10),
                             color: Colors.white,
                           ),
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: TextField(
                               keyboardType: TextInputType.multiline,
                               maxLines: null,
                               minLines: 10,
-                              decoration: InputDecoration(
+                              controller: _bodyController,
+                              decoration: const InputDecoration(
                                 border: InputBorder.none,
-                                hintText: "Corpo",
+                                hintText: "Descrizione",
                                 hintStyle: TextStyle(color: Colors.grey),
                               ),
                             ),
@@ -487,13 +652,14 @@ class _AddSpellPageState extends State<AddSpellPage> {
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.white,
                         ),
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: TextField(
                             keyboardType: TextInputType.multiline,
                             maxLines: null,
                             minLines: 3,
-                            decoration: InputDecoration(
+                            controller: _higherLevelsController,
+                            decoration: const InputDecoration(
                               hintText: "Ai livelli più alti...",
                               hintStyle: TextStyle(color: Colors.grey),
                               border: InputBorder.none,
@@ -510,9 +676,9 @@ class _AddSpellPageState extends State<AddSpellPage> {
                             SizedBox(
                               width: 170,
                               child: ElevatedButton(
-                                onPressed: () {
-                                  print("Click!");
-                                },
+                                onPressed: _spellList == null
+                                    ? null
+                                    : () => _addSpell(),
                                 child: const Text(
                                   "AGGIUNGI",
                                   style: TextStyle(color: Colors.white),
@@ -525,9 +691,9 @@ class _AddSpellPageState extends State<AddSpellPage> {
                             SizedBox(
                               width: 170,
                               child: ElevatedButton(
-                                onPressed: () {
-                                  print("Click!");
-                                },
+                                onPressed: _spellList == null
+                                    ? null
+                                    : () => _exportCsv(),
                                 child: const Text(
                                   "ESPORTA CSV",
                                   style: TextStyle(color: Colors.white),

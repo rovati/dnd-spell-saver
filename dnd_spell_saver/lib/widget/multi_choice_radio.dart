@@ -96,6 +96,7 @@ class _MultiChoiceRadioState<T> extends State<MultiChoiceRadio<T>> {
               setState(() {
                 _value = text;
               });
+              widget.valueCallback(text);
             },
             style: TextStyle(
                 color: _isValueTileSelected()

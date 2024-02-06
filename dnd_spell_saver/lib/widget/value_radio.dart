@@ -93,6 +93,7 @@ class _ValueRadioState<T> extends State<ValueRadio<T>> {
               setState(() {
                 _value = text;
               });
+              widget.valueCallback(text);
             },
             style: TextStyle(
                 color: _selected != null &&

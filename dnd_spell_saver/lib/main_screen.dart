@@ -1,5 +1,6 @@
 import 'package:dnd_spell_saver/add_spell_screen.dart';
 import 'package:dnd_spell_saver/model/spell_list.dart';
+import 'package:dnd_spell_saver/util/screen_args.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatelessWidget {
@@ -7,10 +8,11 @@ class MainScreen extends StatelessWidget {
 
   void _newCsvAndNavigate(BuildContext context) {
     var spellList = SpellList();
-    Navigator.push(
+    Navigator.pushNamed(
       context,
-      MaterialPageRoute(
-        builder: (context) => AddSpellPage(spellList),
+      AddSpellPage.routeName,
+      arguments: ScreenArguments(
+        spellList,
       ),
     );
   }
@@ -18,10 +20,11 @@ class MainScreen extends StatelessWidget {
   void _loadCsvAndNavigate(BuildContext context) {
     var spellList = SpellList();
     spellList.loadCsv();
-    Navigator.push(
+    Navigator.pushNamed(
       context,
-      MaterialPageRoute(
-        builder: (context) => AddSpellPage(spellList),
+      AddSpellPage.routeName,
+      arguments: ScreenArguments(
+        spellList,
       ),
     );
   }
