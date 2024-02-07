@@ -1,0 +1,42 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ deployment ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      my_secret: ${{secrets.ACCESS_TOKEN}}
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - run: flutter clean
+      - run: flutter pub get
+      - run: flutter build web --release
+
+      - run: |
+          cd build
+          mkdir web-deploy
+          cd web-deploy
+          git config --global user.email 53517598+rovati@users.noreply.github.com
+          git config --global user.name rovati
+          git config --global init.defaultBranch main
+          git init
+          git remote add origin https://${{secrets.ACCESS_TOKEN}}@github.com/rovati/dnd-spell-saver.git
+          git fetch origin deployment
+          git switch deployment
+          cp -R ../web/* .
+          git status
+          git add .
+          echo ""
+          echo "Committing to deployment: ${{ github.event.head_commit.message }}"
+          echo ""
+          git commit -m "${{ github.event.head_commit.message }}"
+          git push origin gh-pages
+          
