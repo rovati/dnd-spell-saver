@@ -1,4 +1,4 @@
-myfile = "index.html"
+myfile = "../dnd_spell_saver/build/index.html"
 
 with open(myfile, "r") as f:
     data = f.read()
