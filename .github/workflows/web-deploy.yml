@@ -43,5 +43,5 @@ jobs:
           echo "Committing to deployment: ${{ github.event.head_commit.message }}"
           echo ""
           git commit -m "${{ github.event.head_commit.message }}"
-          git push origin gh-pages
+          git push origin deployment
           
