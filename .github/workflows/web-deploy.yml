@@ -4,6 +4,11 @@ on:
   push:
     branches: [ main ]
 
+defaults:
+  run:
+    working-directory: ./dnd_spell_saver
+
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,7 +21,6 @@ jobs:
         with:
           channel: 'stable'
 
-      - run: cd dnd_spell_saver
       - run: flutter clean
       - run: flutter pub get
       - run: flutter build web --release
