@@ -11,6 +11,11 @@ enum SpellLevel {
   const SpellLevel(this.label);
   final String label;
 
+  static SpellLevel? fromLabel(String label) {
+    Map<String, SpellLevel> map = {for (SpellLevel v in values) v.label: v};
+    return map[label.toLowerCase()];
+  }
+
   @override
   String toString() => label.toUpperCase();
 }

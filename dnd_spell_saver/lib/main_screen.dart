@@ -19,18 +19,6 @@ class MainScreen extends StatelessWidget {
     );
   }
 
-  void _loadCsvAndNavigate(BuildContext context) {
-    var spellList = SpellList();
-    spellList.loadCsv();
-    Navigator.pushNamed(
-      context,
-      AddSpellPage.routeName,
-      arguments: ScreenArguments(
-        spellList,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,10 +35,7 @@ class MainScreen extends StatelessWidget {
               children: [
                 const Text(
                   "DnD Spell Saver",
-                  style: TextStyle(
-                      fontSize: 48,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(
                   height: 100,

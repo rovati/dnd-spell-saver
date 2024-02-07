@@ -9,10 +9,6 @@ class SpellList {
 
   SpellList();
 
-  void loadCsv() {
-    throw UnimplementedError("Not implemented yet.");
-  }
-
   void addSpell(Spell spell) {
     spells.add(spell);
   }
@@ -30,5 +26,22 @@ class SpellList {
       ext: '.csv',
       mimeType: MimeType.csv,
     );
+  }
+
+  (int, int) loadCsv(String fileData) {
+    int parsedSpells = 0;
+    List<List<dynamic>> content =
+        const CsvToListConverter().convert(fileData, convertEmptyTo: "");
+    for (List<dynamic> row in content) {
+      Spell? spell = Spell.fromCsvRow(row);
+      if (spell != null) {
+        spells.add(spell);
+        parsedSpells++;
+      }
+    }
+
+    print(parsedSpells);
+
+    return (parsedSpells, content.length);
   }
 }

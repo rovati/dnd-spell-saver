@@ -1,4 +1,7 @@
+import 'package:dnd_spell_saver/add_spell_screen.dart';
+import 'package:dnd_spell_saver/model/spell_list.dart';
 import 'package:dnd_spell_saver/util/dropzone_state.dart';
+import 'package:dnd_spell_saver/util/screen_args.dart';
 import 'package:dnd_spell_saver/widget/dropzone_corner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
@@ -11,6 +14,7 @@ class StyledDropzone extends StatefulWidget {
 }
 
 class _StyledDropzoneState extends State<StyledDropzone> {
+  SpellList? _spellList;
   DropzoneState _dzState = DropzoneState.ready;
   late DropzoneViewController _dzController;
   String? _errMsg;
@@ -19,6 +23,8 @@ class _StyledDropzoneState extends State<StyledDropzone> {
   double _loadingOpacity = 0;
   double _errorOpacity = 0;
   double _completedOpacity = 0;
+  int _loadedSpells = 0;
+  int _totalSpells = 0;
 
   Widget _dropzoneContent(DropzoneState state) {
     switch (state) {
@@ -97,20 +103,20 @@ class _StyledDropzoneState extends State<StyledDropzone> {
           ],
         );
       case DropzoneState.completed:
-        return const Column(
+        return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.verified,
               color: Color.fromARGB(255, 132, 238, 159),
               size: 35,
             ),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             Text(
-              'FILE ACCETTATO',
-              style: TextStyle(
+              'CARICATO $_loadedSpells SPELLS (DI $_totalSpells)',
+              style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.grey),
@@ -146,6 +152,14 @@ class _StyledDropzoneState extends State<StyledDropzone> {
     });
   }
 
+  void _loadSpellList(String fileContent) {
+    var spellList = SpellList();
+    var (l, s) = spellList.loadCsv(fileContent);
+    _loadedSpells = l;
+    _totalSpells = s;
+    _spellList = spellList;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -167,7 +181,24 @@ class _StyledDropzoneState extends State<StyledDropzone> {
                 print(mime);
               } else {
                 final bytes = await _dzController.getFileData(ev);
+                _loadSpellList(String.fromCharCodes(bytes));
                 _updateState(DropzoneState.completed);
+
+                Future.delayed(const Duration(seconds: 3)).then((value) {
+                  if (_spellList != null) {
+                    Navigator.pushNamed(
+                      context,
+                      AddSpellPage.routeName,
+                      arguments: ScreenArguments(
+                        _spellList!,
+                      ),
+                    );
+                  } else {
+                    _errMsg = 'SI È VERIFICATO UN ERRORE';
+                    _updateState(DropzoneState.error);
+                  }
+                });
+
                 print(String.fromCharCodes(bytes));
               }
             },
