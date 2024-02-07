@@ -4,11 +4,6 @@ on:
   push:
     branches: [ main ]
 
-defaults:
-  run:
-    working-directory: ./dnd_spell_saver
-
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,11 +16,19 @@ jobs:
         with:
           channel: 'stable'
 
-      - run: flutter clean
-      - run: flutter pub get
-      - run: flutter build web --release
+      - run: |
+          cd dnd_spell_saver
+          flutter clean
+      - run: |
+          cd dnd_spell_saver
+          flutter pub get
+      - run: |
+          cd dnd_spell_saver
+          flutter build web --release
+      - run: python ./.github/workflows/href_remover.py
 
       - run: |
+          cd dnd_spell_saver
           cd build
           mkdir web-deploy
           cd web-deploy
