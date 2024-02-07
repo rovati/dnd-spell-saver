@@ -234,7 +234,7 @@ class _AddSpellPageState extends State<AddSpellPage> {
               children: <Widget>[
                 // titolo
                 Padding(
-                  padding: const EdgeInsets.only(top: 30),
+                  padding: const EdgeInsets.only(top: 0),
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),

@@ -2,9 +2,8 @@ import 'package:dnd_spell_saver/add_spell_screen.dart';
 import 'package:dnd_spell_saver/model/spell_list.dart';
 import 'package:dnd_spell_saver/util/screen_args.dart';
 import 'package:dnd_spell_saver/widget/centered_scrollable.dart';
-import 'package:dnd_spell_saver/widget/dropzone_corner.dart';
+import 'package:dnd_spell_saver/widget/styled_dropzone.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dropzone/flutter_dropzone.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -37,7 +36,7 @@ class MainScreen extends StatelessWidget {
     return Scaffold(
       body: DefaultTextStyle.merge(
         style: const TextStyle(
-          color: Colors.grey,
+          color: Color.fromARGB(255, 122, 122, 122),
         ),
         child: CenteredScrollable(
           padding: 20,
@@ -47,7 +46,7 @@ class MainScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  "An Unnecessarily Large Title",
+                  "DnD Spell Saver",
                   style: TextStyle(
                       fontSize: 48,
                       color: Colors.white,
@@ -55,6 +54,10 @@ class MainScreen extends StatelessWidget {
                 ),
                 const SizedBox(
                   height: 100,
+                ),
+                const Text('Per cominciare, crea un nuovo csv:'),
+                const SizedBox(
+                  height: 30,
                 ),
                 SizedBox(
                   width: 250,
@@ -72,56 +75,11 @@ class MainScreen extends StatelessWidget {
                 const SizedBox(
                   height: 100,
                 ),
-                SizedBox(
-                  width: 350,
-                  height: 200,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      DropzoneView(
-                        onDrop: (val) => print("Dropped"),
-                      ),
-                      Container(
-                        width: 350,
-                        height: 200,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: const Color.fromARGB(255, 218, 218, 218),
-                        ),
-                      ),
-                      const DropzoneCorner(position: Alignment.topLeft),
-                      const DropzoneCorner(position: Alignment.topRight),
-                      const DropzoneCorner(position: Alignment.bottomLeft),
-                      const DropzoneCorner(position: Alignment.bottomRight),
-                      Container(
-                        width: 350 - 4 - 4,
-                        height: 200 - 4 - 4,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(18),
-                          color: Colors.white,
-                        ),
-                      ),
-                      const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.upload_file,
-                            color: Colors.grey,
-                            size: 35,
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Text(
-                            'TRASCINA QUI',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                const Text('Oppure, comincia da un csv esistente:'),
+                const SizedBox(
+                  height: 30,
                 ),
+                const StyledDropzone(),
               ],
             ),
           ),
