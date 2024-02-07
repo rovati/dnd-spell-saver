@@ -23,7 +23,7 @@ jobs:
 
       - run: flutter clean
       - run: flutter pub get
-      - run: flutter build web --release --base-href=/deployment/
+      - run: flutter build web --release --base-href=/dnd-spell-saver/
 
       - run: |
           cd build
