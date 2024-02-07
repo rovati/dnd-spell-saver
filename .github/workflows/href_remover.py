@@ -1,4 +1,4 @@
-myfile = "../../dnd_spell_saver/build/web/index.html"
+myfile = "/home/runner/work/dnd-spell-saver/dnd-spell-saver/./dnd_spell_saver/build/web/index.html"
 
 with open(myfile, "r") as f:
     data = f.read()
