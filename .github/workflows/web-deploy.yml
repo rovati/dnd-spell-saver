@@ -23,7 +23,7 @@ jobs:
 
       - run: flutter clean
       - run: flutter pub get
-      - run: flutter build web --release --base-href=/dnd-spell-saver/
+      - run: flutter build web --release
 
       - run: |
           cd build
@@ -34,14 +34,14 @@ jobs:
           git config --global init.defaultBranch main
           git init
           git remote add origin https://${{secrets.ACCESS_TOKEN}}@github.com/rovati/dnd-spell-saver.git
-          git fetch origin deployment
-          git switch deployment
+          git fetch origin gh-pages
+          git switch gh-pages
           cp -R ../web/* .
           git status
           git add .
           echo ""
-          echo "Committing to deployment: ${{ github.event.head_commit.message }}"
+          echo "Committing to gh-pages: ${{ github.event.head_commit.message }}"
           echo ""
           git commit -m "${{ github.event.head_commit.message }}"
-          git push origin deployment
+          git push origin gh-pages
           
