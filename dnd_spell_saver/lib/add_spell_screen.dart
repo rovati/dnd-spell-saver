@@ -7,6 +7,7 @@ import 'package:dnd_spell_saver/value/components.dart';
 import 'package:dnd_spell_saver/value/duration.dart';
 import 'package:dnd_spell_saver/value/range.dart';
 import 'package:dnd_spell_saver/value/saving_throw.dart';
+import 'package:dnd_spell_saver/view_spells_screen.dart';
 import 'package:dnd_spell_saver/widget/centered_scrollable.dart';
 import 'package:dnd_spell_saver/widget/multi_choice_radio.dart';
 import 'package:dnd_spell_saver/widget/simple_radio.dart';
@@ -19,7 +20,7 @@ import 'value/school.dart';
 import 'value/source.dart';
 
 class AddSpellPage extends StatefulWidget {
-  static const routeName = '/addspell';
+  static const routeName = '/add_spell';
 
   const AddSpellPage({super.key});
 
@@ -670,6 +671,30 @@ class _AddSpellPageState extends State<AddSpellPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      SizedBox(
+                        width: 170,
+                        child: ElevatedButton(
+                          onPressed: () => Navigator.pushNamed(
+                            context,
+                            ViewSpellsPage.routeName,
+                            arguments: ScreenArguments(
+                              _spellList!,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 220, 226, 233),
+                          ),
+                          child: Text(
+                            "LISTA",
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 30,
+                      ),
                       SizedBox(
                         width: 170,
                         child: ElevatedButton(

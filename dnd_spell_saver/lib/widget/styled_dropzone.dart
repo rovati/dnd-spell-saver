@@ -1,7 +1,7 @@
-import 'package:dnd_spell_saver/add_spell_screen.dart';
 import 'package:dnd_spell_saver/model/spell_list.dart';
 import 'package:dnd_spell_saver/util/dropzone_state.dart';
 import 'package:dnd_spell_saver/util/screen_args.dart';
+import 'package:dnd_spell_saver/view_spells_screen.dart';
 import 'package:dnd_spell_saver/widget/dropzone_corner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
@@ -115,7 +115,7 @@ class _StyledDropzoneState extends State<StyledDropzone> {
               height: 15,
             ),
             Text(
-              'CARICATO $_loadedSpells SPELLS (DI $_totalSpells)',
+              'CARICATO $_loadedSpells INCANTESIMI (DI $_totalSpells)',
               style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -178,17 +178,16 @@ class _StyledDropzoneState extends State<StyledDropzone> {
               if (mime != "text/csv") {
                 _errMsg = 'IL FILE DEVE ESSERE .CVS';
                 _updateState(DropzoneState.error);
-                print(mime);
               } else {
                 final bytes = await _dzController.getFileData(ev);
                 _loadSpellList(String.fromCharCodes(bytes));
                 _updateState(DropzoneState.completed);
 
-                Future.delayed(const Duration(seconds: 3)).then((value) {
+                Future.delayed(const Duration(seconds: 2)).then((value) {
                   if (_spellList != null) {
                     Navigator.pushNamed(
                       context,
-                      AddSpellPage.routeName,
+                      ViewSpellsPage.routeName,
                       arguments: ScreenArguments(
                         _spellList!,
                       ),
@@ -198,8 +197,6 @@ class _StyledDropzoneState extends State<StyledDropzone> {
                     _updateState(DropzoneState.error);
                   }
                 });
-
-                print(String.fromCharCodes(bytes));
               }
             },
             onError: (err) {

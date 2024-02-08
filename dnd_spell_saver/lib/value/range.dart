@@ -1,5 +1,6 @@
 enum Range {
-  spellcaster('incantatore');
+  spellcaster('incantatore'),
+  touch('contatto');
 
   const Range(this.label);
   final String label;
