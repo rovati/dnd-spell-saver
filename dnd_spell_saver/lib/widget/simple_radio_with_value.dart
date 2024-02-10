@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 
 class SimpleRadioWithValue<T> extends StatefulWidget {
+  final String title;
   final List<T> labels;
   final double tileWidth;
   final bool noTile;
   final String hint;
-  final bool compact;
   final void Function(T newVal) selectionCallback;
   final void Function(String newStrVal) valueCallback;
 
   const SimpleRadioWithValue(
       {super.key,
+      required this.title,
       required this.labels,
       required this.tileWidth,
       required this.hint,
       required this.selectionCallback,
       required this.valueCallback,
-      this.compact = false,
       this.noTile = false});
 
   @override
@@ -111,18 +111,35 @@ class _SimpleRadioWithValueState<T> extends State<SimpleRadioWithValue<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Row(
-        mainAxisAlignment: widget.compact
-            ? MainAxisAlignment.start
-            : MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.max,
-        children: widget.labels
-                .map(
-                  (e) => _simpleRadioTile(e, widget.tileWidth),
-                )
-                .toList() +
-            [_valueRadioTile()],
+    return Card(
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            SizedBox(
+              width: 125,
+              child: Text(
+                '${widget.title}:',
+                textAlign: TextAlign.right,
+              ),
+            ),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.max,
+                children: widget.labels
+                        .map(
+                          (e) => _simpleRadioTile(e, widget.tileWidth),
+                        )
+                        .toList() +
+                    [_valueRadioTile()],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

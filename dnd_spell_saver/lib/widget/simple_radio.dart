@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SimpleRadio<T> extends StatefulWidget {
+  final String title;
   final List<T> labels;
   final double tileWidth;
   final bool noTile;
@@ -8,6 +9,7 @@ class SimpleRadio<T> extends StatefulWidget {
 
   const SimpleRadio({
     super.key,
+    required this.title,
     required this.labels,
     required this.tileWidth,
     required this.selectionCallback,
@@ -58,13 +60,32 @@ class _SimpleRadioState<T> extends State<SimpleRadio<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Card(
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
-          children: widget.labels
-              .map((e) => _radioTile(e, widget.tileWidth))
-              .toList()),
+          children: [
+            SizedBox(
+              width: 125,
+              child: Text(
+                '${widget.title}:',
+                textAlign: TextAlign.right,
+              ),
+            ),
+            Expanded(
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  children: widget.labels
+                      .map((e) => _radioTile(e, widget.tileWidth))
+                      .toList()),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

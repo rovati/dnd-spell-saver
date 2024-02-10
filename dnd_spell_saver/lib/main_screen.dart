@@ -6,6 +6,8 @@ import 'package:dnd_spell_saver/widget/styled_dropzone.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatelessWidget {
+  static const String routeName = "/";
+
   const MainScreen({super.key});
 
   void _newCsvAndNavigate(BuildContext context) {

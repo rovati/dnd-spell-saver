@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ValueRadio<T> extends StatefulWidget {
+  final String title;
   final List<T> labels;
   final double tileWidth;
   final double valueTileWidth;
@@ -14,6 +15,7 @@ class ValueRadio<T> extends StatefulWidget {
 
   const ValueRadio(
       {super.key,
+      required this.title,
       required this.labels,
       required this.tileWidth,
       required this.hint,
@@ -118,25 +120,44 @@ class _ValueRadioState<T> extends State<ValueRadio<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Row(
-        mainAxisAlignment: widget.fill
-            ? MainAxisAlignment.start
-            : MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.max,
-        children: widget.labels
-                .map((e) => _simpleRadioTile(e, widget.tileWidth))
-                .toList() +
-            [
-              Padding(
-                padding: const EdgeInsets.only(left: 15),
-                child: widget.fill
-                    ? Expanded(
-                        child: _valueRadioTile(widget.fill),
-                      )
-                    : _valueRadioTile(widget.fill),
+    return Card(
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            SizedBox(
+              width: 125,
+              child: Text(
+                '${widget.title}:',
+                textAlign: TextAlign.right,
               ),
-            ],
+            ),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: widget.fill
+                    ? MainAxisAlignment.start
+                    : MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.max,
+                children: widget.labels
+                        .map((e) => _simpleRadioTile(e, widget.tileWidth))
+                        .toList() +
+                    [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15),
+                        child: widget.fill
+                            ? Expanded(
+                                child: _valueRadioTile(widget.fill),
+                              )
+                            : _valueRadioTile(widget.fill),
+                      ),
+                    ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

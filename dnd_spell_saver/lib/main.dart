@@ -1,5 +1,6 @@
 import 'package:dnd_spell_saver/add_spell_screen.dart';
 import 'package:dnd_spell_saver/main_screen.dart';
+import 'package:dnd_spell_saver/util/theme_data.dart';
 import 'package:dnd_spell_saver/view_spells_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -16,23 +17,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'DnD Spell Saver',
       theme: ThemeData(
-        colorScheme: const ColorScheme(
-            brightness: Brightness.dark,
-            primary: Color.fromARGB(255, 124, 168, 235),
-            onPrimary: Colors.white,
-            secondary: Color.fromARGB(255, 255, 255, 255),
-            onSecondary: Color.fromARGB(255, 104, 104, 104),
-            error: Color.fromARGB(255, 196, 49, 49),
-            onError: Colors.white,
-            background: Color.fromARGB(255, 220, 226, 233),
-            onBackground: Color.fromARGB(255, 100, 100, 100),
-            surface: Color.fromARGB(255, 124, 168, 235),
-            onSurface: Colors.grey),
+        colorScheme: AppThemeData.lightColorScheme,
         useMaterial3: true,
       ),
-      initialRoute: '/',
+      darkTheme: ThemeData(
+        colorScheme: AppThemeData.darkColorScheme,
+        useMaterial3: true,
+      ),
+      themeMode: ThemeMode.light,
+      initialRoute: AddSpellPage.routeName,
       routes: {
-        '/': (context) => const MainScreen(),
+        MainScreen.routeName: (context) => const MainScreen(),
         AddSpellPage.routeName: (context) => const AddSpellPage(),
         ViewSpellsPage.routeName: (context) => const ViewSpellsPage(),
       },

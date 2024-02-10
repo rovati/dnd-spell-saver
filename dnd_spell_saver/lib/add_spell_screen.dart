@@ -1,6 +1,7 @@
 import 'package:dnd_spell_saver/model/spell.dart';
 import 'package:dnd_spell_saver/model/spell_list.dart';
 import 'package:dnd_spell_saver/util/screen_args.dart';
+import 'package:dnd_spell_saver/util/theme_data.dart';
 import 'package:dnd_spell_saver/value/area_of_effect.dart';
 import 'package:dnd_spell_saver/value/casting_time.dart';
 import 'package:dnd_spell_saver/value/components.dart';
@@ -29,7 +30,7 @@ class AddSpellPage extends StatefulWidget {
 }
 
 class _AddSpellPageState extends State<AddSpellPage> {
-  SpellList? _spellList;
+  SpellList? _spellList = SpellList.mock();
 
   final _titleController = TextEditingController();
   final _enTitleController = TextEditingController();
@@ -216,405 +217,355 @@ class _AddSpellPageState extends State<AddSpellPage> {
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as ScreenArguments;
+    /*final args = ModalRoute.of(context)!.settings.arguments as ScreenArguments;
     setState(() {
       _spellList = args.spellList;
-    });
+    });*/
 
     return Scaffold(
-      body: DefaultTextStyle.merge(
-        style: const TextStyle(
-          color: Colors.grey,
-        ),
-        child: CenteredScrollable(
-          padding: 20,
+      backgroundColor: AppThemeData.lightColorScheme.surfaceVariant,
+      body: CenteredScrollable(
+        padding: 10,
+        child: Card(
+          elevation: 7,
+          surfaceTintColor: AppThemeData.lightColorScheme.background,
           child: SizedBox(
-            width: 650,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                // titolo
-                Padding(
-                  padding: const EdgeInsets.only(top: 0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
-                    ),
-                    width: 500,
-                    child: TextField(
-                      decoration: const InputDecoration(
-                        hintText: "TITOLO",
-                        hintStyle: TextStyle(fontSize: 20, color: Colors.grey),
-                        border: InputBorder.none,
+            width: 710,
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  // titolo
+                  Padding(
+                    padding: const EdgeInsets.only(top: 0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white,
                       ),
-                      controller: _titleController,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 20, color: Colors.grey),
-                    ),
-                  ),
-                ),
-                // titolo inglese
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
-                    ),
-                    width: 300,
-                    height: 35,
-                    child: Center(
+                      width: 500,
                       child: TextField(
                         decoration: const InputDecoration(
-                          hintText: "TITOLO INGLESE",
+                          hintText: "TITOLO",
                           hintStyle:
-                              TextStyle(fontSize: 14, color: Colors.grey),
+                              TextStyle(fontSize: 20, color: Colors.grey),
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(vertical: 15),
                         ),
-                        style:
-                            const TextStyle(fontSize: 14, color: Colors.grey),
-                        controller: _enTitleController,
+                        controller: _titleController,
                         textAlign: TextAlign.center,
+                        style:
+                            const TextStyle(fontSize: 20, color: Colors.grey),
                       ),
                     ),
                   ),
-                ),
-                // fonte
-                Padding(
-                  padding: const EdgeInsets.only(top: 15, bottom: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      const SizedBox(
-                        width: 125,
-                        child: Text(
-                          "FONTE:",
-                          textAlign: TextAlign.right,
+                  // titolo inglese
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white,
+                      ),
+                      width: 300,
+                      height: 35,
+                      child: Center(
+                        child: TextField(
+                          decoration: const InputDecoration(
+                            hintText: "TITOLO INGLESE",
+                            hintStyle:
+                                TextStyle(fontSize: 14, color: Colors.grey),
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(vertical: 15),
+                          ),
+                          style:
+                              const TextStyle(fontSize: 14, color: Colors.grey),
+                          controller: _enTitleController,
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                      SimpleRadio<Source>(
-                        labels: Source.values,
-                        tileWidth: 85,
-                        selectionCallback: (val) {
-                          _source = val;
-                        },
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-                // livello scuola
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      const SizedBox(
-                        width: 60,
-                        child: Text(
-                          "LIVELLO:",
-                          textAlign: TextAlign.right,
+                  // livello scuola
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        const SizedBox(
+                          width: 60,
+                          child: Text(
+                            "LIVELLO:",
+                            textAlign: TextAlign.right,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 15),
-                        child: DropdownMenu<SpellLevel>(
-                          width: 200,
-                          hintText: "SELEZIONA",
-                          controller: _spellLevelController,
-                          requestFocusOnTap: true,
-                          enableSearch: false,
-                          onSelected: (SpellLevel? level) {
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: DropdownMenu<SpellLevel>(
+                            width: 200,
+                            hintText: "SELEZIONA",
+                            controller: _spellLevelController,
+                            requestFocusOnTap: true,
+                            enableSearch: false,
+                            onSelected: (SpellLevel? level) {
+                              setState(() {
+                                _spellLevel = level;
+                              });
+                            },
+                            inputDecorationTheme: const InputDecorationTheme(
+                              filled: true,
+                              fillColor: Colors.white,
+                              enabledBorder: InputBorder.none,
+                            ),
+                            textStyle: const TextStyle(
+                                color: Colors.grey, fontSize: 14),
+                            dropdownMenuEntries: SpellLevel.values
+                                .map<DropdownMenuEntry<SpellLevel>>(
+                                    (SpellLevel level) {
+                              return DropdownMenuEntry<SpellLevel>(
+                                value: level,
+                                label: level.label,
+                                style: MenuItemButton.styleFrom(
+                                    foregroundColor: level == _spellLevel
+                                        ? Theme.of(context).primaryColor
+                                        : Colors.grey,
+                                    backgroundColor: Colors.white),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                        const Expanded(child: SizedBox()),
+                        const SizedBox(
+                          width: 60,
+                          child: Text(
+                            "SCUOLA:",
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: DropdownMenu<School>(
+                            width: 200,
+                            hintText: "SELEZIONA",
+                            controller: _schoolController,
+                            requestFocusOnTap: true,
+                            enableSearch: false,
+                            onSelected: (School? school) {
+                              setState(() {
+                                _school = school;
+                              });
+                            },
+                            inputDecorationTheme: const InputDecorationTheme(
+                              filled: true,
+                              fillColor: Colors.white,
+                              enabledBorder: InputBorder.none,
+                            ),
+                            textStyle: const TextStyle(
+                                color: Colors.grey, fontSize: 14),
+                            dropdownMenuEntries: School.values
+                                .map<DropdownMenuEntry<School>>(
+                                    (School school) {
+                              return DropdownMenuEntry<School>(
+                                value: school,
+                                label: school.label,
+                                style: MenuItemButton.styleFrom(
+                                    foregroundColor: school == _school
+                                        ? Theme.of(context).primaryColor
+                                        : Colors.grey,
+                                    backgroundColor: Colors.white),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // concentrazione, rituale
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        const SizedBox(
+                          width: 130,
+                          child: Text(
+                            "CONCENTRAZIONE:",
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
+                        Checkbox(
+                          value: _concentration,
+                          onChanged: (val) {
                             setState(() {
-                              _spellLevel = level;
+                              _concentration = val!;
                             });
                           },
-                          inputDecorationTheme: const InputDecorationTheme(
-                            filled: true,
-                            fillColor: Colors.white,
-                            enabledBorder: InputBorder.none,
+                        ),
+                        const SizedBox(
+                          width: 130,
+                          child: Text(
+                            "RITUALE:",
+                            textAlign: TextAlign.right,
                           ),
-                          textStyle:
-                              const TextStyle(color: Colors.grey, fontSize: 14),
-                          dropdownMenuEntries: SpellLevel.values
-                              .map<DropdownMenuEntry<SpellLevel>>(
-                                  (SpellLevel level) {
-                            return DropdownMenuEntry<SpellLevel>(
-                              value: level,
-                              label: level.label,
-                              style: MenuItemButton.styleFrom(
-                                  foregroundColor: level == _spellLevel
-                                      ? Theme.of(context).primaryColor
-                                      : Colors.grey,
-                                  backgroundColor: Colors.white),
-                            );
-                          }).toList(),
                         ),
-                      ),
-                      const Expanded(child: SizedBox()),
-                      const SizedBox(
-                        width: 60,
-                        child: Text(
-                          "SCUOLA:",
-                          textAlign: TextAlign.right,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 15),
-                        child: DropdownMenu<School>(
-                          width: 200,
-                          hintText: "SELEZIONA",
-                          controller: _schoolController,
-                          requestFocusOnTap: true,
-                          enableSearch: false,
-                          onSelected: (School? school) {
+                        Checkbox(
+                          value: _ritual,
+                          onChanged: (val) {
                             setState(() {
-                              _school = school;
+                              _ritual = val!;
                             });
                           },
-                          inputDecorationTheme: const InputDecorationTheme(
-                            filled: true,
-                            fillColor: Colors.white,
-                            enabledBorder: InputBorder.none,
+                        ),
+                      ],
+                    ),
+                  ),
+                  // tempo lancio
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: SimpleRadioWithValue<CastingTime>(
+                      title: 'TEMPO DI LANCIO',
+                      labels: CastingTime.values,
+                      tileWidth: 90,
+                      hint: CastingTime.hint,
+                      selectionCallback: (val) {
+                        _castingTime = val;
+                      },
+                      valueCallback: (strVal) {
+                        _strCastingTime = strVal;
+                      },
+                    ),
+                  ),
+                  // gittata
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: SimpleRadioWithValue<Range>(
+                      title: 'GITTATA',
+                      labels: Range.values,
+                      tileWidth: 150,
+                      hint: Range.hint,
+                      selectionCallback: (val) {
+                        _range = val;
+                      },
+                      valueCallback: (strVal) {
+                        _strRange = strVal;
+                      },
+                    ),
+                  ),
+                  // durata
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: SimpleRadioWithValue<Duration>(
+                      title: 'DURATA',
+                      labels: Duration.values,
+                      tileWidth: 220,
+                      hint: Duration.hint,
+                      selectionCallback: (val) {
+                        _duration = val;
+                      },
+                      valueCallback: (strVal) {
+                        _strDuration = strVal;
+                      },
+                    ),
+                  ),
+                  // componenti
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: MultiChoiceRadio(
+                      title: 'COMPONENTI',
+                      labels: Component.values,
+                      tileWidth: 30,
+                      hint: Component.hint,
+                      selectionCallback: (val) {
+                        _components.add(val);
+                      },
+                      deselectionCallback: (val) {
+                        _components.remove(val);
+                      },
+                      valueCallback: (strVal) {
+                        _material = strVal;
+                      },
+                      valueBound: const [Component.material],
+                      valueTileWidth: 370,
+                    ),
+                  ),
+                  // area
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: ValueRadio<AreaOfEffect>(
+                      title: 'AREA',
+                      labels: AreaOfEffect.values,
+                      tileWidth: 70,
+                      valueTileWidth: 100,
+                      hint: AreaOfEffect.hint,
+                      selectionCallback: (val) {
+                        _area = val;
+                      },
+                      valueCallback: (strVal) {
+                        _dimAoE = strVal;
+                      },
+                    ),
+                  ),
+                  // ts
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: SimpleRadio<SavingThrow>(
+                      title: 'TIRO SALVEZZA',
+                      labels: SavingThrow.values,
+                      tileWidth: 60,
+                      selectionCallback: (val) {
+                        _savingThrow = val;
+                      },
+                    ),
+                  ),
+                  // fonte
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: SimpleRadio<Source>(
+                      title: 'FONTE',
+                      labels: Source.values,
+                      tileWidth: 85,
+                      selectionCallback: (val) {
+                        _source = val;
+                      },
+                    ),
+                  ),
+                  // corpo
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: TextField(
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          minLines: 8,
+                          controller: _bodyController,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Descrizione",
+                            hintStyle: TextStyle(color: Colors.grey),
                           ),
-                          textStyle:
-                              const TextStyle(color: Colors.grey, fontSize: 14),
-                          dropdownMenuEntries: School.values
-                              .map<DropdownMenuEntry<School>>((School school) {
-                            return DropdownMenuEntry<School>(
-                              value: school,
-                              label: school.label,
-                              style: MenuItemButton.styleFrom(
-                                  foregroundColor: school == _school
-                                      ? Theme.of(context).primaryColor
-                                      : Colors.grey,
-                                  backgroundColor: Colors.white),
-                            );
-                          }).toList(),
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
-                // concentrazione, rituale
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      const SizedBox(
-                        width: 130,
-                        child: Text(
-                          "CONCENTRAZIONE:",
-                          textAlign: TextAlign.right,
-                        ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      child: const Center(
+                        child: Text("AI LIVELLI PIÙ ALTI"),
                       ),
-                      Checkbox(
-                        value: _concentration,
-                        onChanged: (val) {
-                          setState(() {
-                            _concentration = val!;
-                          });
-                        },
-                      ),
-                      const SizedBox(
-                        width: 130,
-                        child: Text(
-                          "RITUALE:",
-                          textAlign: TextAlign.right,
-                        ),
-                      ),
-                      Checkbox(
-                        value: _ritual,
-                        onChanged: (val) {
-                          setState(() {
-                            _ritual = val!;
-                          });
-                        },
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-                // tempo lancio
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      const SizedBox(
-                        width: 125,
-                        child: Text(
-                          "TEMPO DI LANCIO:",
-                          textAlign: TextAlign.right,
-                        ),
-                      ),
-                      SimpleRadioWithValue<CastingTime>(
-                        labels: CastingTime.values,
-                        tileWidth: 90,
-                        hint: CastingTime.hint,
-                        selectionCallback: (val) {
-                          _castingTime = val;
-                        },
-                        valueCallback: (strVal) {
-                          _strCastingTime = strVal;
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                // gittata
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      const SizedBox(
-                        width: 125,
-                        child: Text(
-                          "GITTATA:",
-                          textAlign: TextAlign.right,
-                        ),
-                      ),
-                      SimpleRadioWithValue<Range>(
-                        labels: Range.values,
-                        tileWidth: 150,
-                        hint: Range.hint,
-                        selectionCallback: (val) {
-                          _range = val;
-                        },
-                        valueCallback: (strVal) {
-                          _strRange = strVal;
-                        },
-                        compact: true,
-                      ),
-                    ],
-                  ),
-                ),
-                // durata
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      const SizedBox(
-                        width: 125,
-                        child: Text(
-                          "DURATA:",
-                          textAlign: TextAlign.right,
-                        ),
-                      ),
-                      SimpleRadioWithValue<Duration>(
-                        labels: Duration.values,
-                        tileWidth: 150,
-                        hint: Duration.hint,
-                        selectionCallback: (val) {
-                          _duration = val;
-                        },
-                        valueCallback: (strVal) {
-                          _strDuration = strVal;
-                        },
-                        compact: true,
-                      ),
-                    ],
-                  ),
-                ),
-                // componenti
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      const SizedBox(
-                        width: 125,
-                        child: Text(
-                          "COMPONENTI:",
-                          textAlign: TextAlign.right,
-                        ),
-                      ),
-                      MultiChoiceRadio(
-                        labels: Component.values,
-                        tileWidth: 30,
-                        hint: Component.hint,
-                        selectionCallback: (val) {
-                          _components.add(val);
-                        },
-                        deselectionCallback: (val) {
-                          _components.remove(val);
-                        },
-                        valueCallback: (strVal) {
-                          _material = strVal;
-                        },
-                        valueBound: const [Component.material],
-                        valueTileWidth: 370,
-                      ),
-                    ],
-                  ),
-                ),
-                // area
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      const SizedBox(
-                        width: 125,
-                        child: Text(
-                          "AREA:",
-                          textAlign: TextAlign.right,
-                        ),
-                      ),
-                      ValueRadio<AreaOfEffect>(
-                        labels: AreaOfEffect.values,
-                        tileWidth: 70,
-                        valueTileWidth: 100,
-                        hint: AreaOfEffect.hint,
-                        selectionCallback: (val) {
-                          _area = val;
-                        },
-                        valueCallback: (strVal) {
-                          _dimAoE = strVal;
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                // ts
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      const SizedBox(
-                        width: 125,
-                        child: Text(
-                          "TIRO SLAVEZZA:",
-                          textAlign: TextAlign.right,
-                        ),
-                      ),
-                      SimpleRadio<SavingThrow>(
-                        labels: SavingThrow.values,
-                        tileWidth: 60,
-                        selectionCallback: (val) {
-                          _savingThrow = val;
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                // corpo
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  child: Container(
+                  // livelli alti
+                  Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.white,
@@ -624,106 +575,76 @@ class _AddSpellPageState extends State<AddSpellPage> {
                       child: TextField(
                         keyboardType: TextInputType.multiline,
                         maxLines: null,
-                        minLines: 10,
-                        controller: _bodyController,
+                        minLines: 3,
+                        controller: _higherLevelsController,
                         decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "Descrizione",
+                          hintText: "Ai livelli più alti...",
                           hintStyle: TextStyle(color: Colors.grey),
+                          border: InputBorder.none,
                         ),
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    child: const Center(
-                      child: Text("AI LIVELLI PIÙ ALTI"),
-                    ),
-                  ),
-                ),
-                // livelli alti
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: TextField(
-                      keyboardType: TextInputType.multiline,
-                      maxLines: null,
-                      minLines: 3,
-                      controller: _higherLevelsController,
-                      decoration: const InputDecoration(
-                        hintText: "Ai livelli più alti...",
-                        hintStyle: TextStyle(color: Colors.grey),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                ),
-                // buttons
-                Padding(
-                  padding: const EdgeInsets.only(top: 30, bottom: 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 170,
-                        child: ElevatedButton(
-                          onPressed: () => Navigator.pushNamed(
-                            context,
-                            ViewSpellsPage.routeName,
-                            arguments: ScreenArguments(
-                              _spellList!,
+                  // buttons
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30, bottom: 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 170,
+                          child: ElevatedButton(
+                            onPressed: () => Navigator.pushNamed(
+                              context,
+                              ViewSpellsPage.routeName,
+                              arguments: ScreenArguments(
+                                _spellList!,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  const Color.fromARGB(255, 220, 226, 233),
+                            ),
+                            child: Text(
+                              "LISTA",
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor),
                             ),
                           ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 220, 226, 233),
-                          ),
-                          child: Text(
-                            "LISTA",
-                            style: TextStyle(
-                                color: Theme.of(context).primaryColor),
+                        ),
+                        const SizedBox(
+                          width: 30,
+                        ),
+                        SizedBox(
+                          width: 170,
+                          child: ElevatedButton(
+                            onPressed:
+                                _spellList == null ? null : () => _addSpell(),
+                            child: const Text(
+                              "AGGIUNGI",
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 30,
-                      ),
-                      SizedBox(
-                        width: 170,
-                        child: ElevatedButton(
-                          onPressed:
-                              _spellList == null ? null : () => _addSpell(),
-                          child: const Text(
-                            "AGGIUNGI",
-                            style: TextStyle(color: Colors.white),
+                        const SizedBox(
+                          width: 30,
+                        ),
+                        SizedBox(
+                          width: 170,
+                          child: ElevatedButton(
+                            onPressed:
+                                _spellList == null ? null : () => _exportCsv(),
+                            child: const Text(
+                              "ESPORTA CSV",
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 30,
-                      ),
-                      SizedBox(
-                        width: 170,
-                        child: ElevatedButton(
-                          onPressed:
-                              _spellList == null ? null : () => _exportCsv(),
-                          child: const Text(
-                            "ESPORTA CSV",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
