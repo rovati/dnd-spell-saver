@@ -16,6 +16,7 @@ dependencies:
   csv: ^5.1.1
   file_saver: ^0.2.9
   flutter_dropzone: ^3.0.7
+  provider: ^6.1.1
 
 dev_dependencies:
   flutter_test:

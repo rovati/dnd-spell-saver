@@ -100,6 +100,7 @@ class _SimpleRadioWithValueState<T> extends State<SimpleRadioWithValue<T>> {
                 hintStyle: const TextStyle(
                   color: Colors.grey,
                   fontSize: 14,
+                  fontStyle: FontStyle.italic,
                 ),
               ),
             ),

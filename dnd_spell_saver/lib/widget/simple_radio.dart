@@ -1,3 +1,4 @@
+import 'package:dnd_spell_saver/util/theme_data.dart';
 import 'package:flutter/material.dart';
 
 class SimpleRadio<T> extends StatefulWidget {
@@ -22,35 +23,70 @@ class SimpleRadio<T> extends StatefulWidget {
 
 class _SimpleRadioState<T> extends State<SimpleRadio<T>> {
   T? _selected;
+  T? _hovering;
+
+  Color _containerColor(bool selected, bool hovering) {
+    if (selected) {
+      return AppThemeData.lightColorScheme.primary;
+    } else {
+      if (hovering) {
+        return AppThemeData.lightColorScheme.primaryContainer;
+      } else {
+        return AppThemeData.lightColorScheme.background;
+      }
+    }
+  }
+
+  Color _textColor(bool selected, bool hovering) {
+    if (selected) {
+      return AppThemeData.lightColorScheme.onPrimary;
+    } else {
+      if (hovering) {
+        return AppThemeData.lightColorScheme.onPrimaryContainer;
+      } else {
+        return AppThemeData.lightColorScheme.onBackground;
+      }
+    }
+  }
 
   Widget _radioTile(T elem, double width) {
+    bool sel = _selected != null && _selected == elem;
+    bool hover = _hovering != null && _hovering == elem;
+
     return Padding(
       padding: const EdgeInsets.only(left: 15),
-      child: GestureDetector(
-        onTap: () {
+      child: MouseRegion(
+        hitTestBehavior: HitTestBehavior.translucent,
+        onEnter: (event) {
           setState(() {
-            _selected = elem;
+            _hovering = elem;
           });
-          widget.selectionCallback(elem);
         },
-        child: Container(
-          width: elem.toString() == "NO" ? 40 : widget.tileWidth,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-                width: 2,
-                color: _selected == elem
-                    ? Theme.of(context).primaryColor
-                    : Colors.transparent),
-          ),
-          child: Center(
-            child: Text(
-              elem.toString(),
-              style: TextStyle(
-                  color: _selected == elem
-                      ? Theme.of(context).primaryColor
-                      : Colors.grey),
+        onExit: (event) => (setState(() {
+          _hovering = null;
+        })),
+        child: GestureDetector(
+          onTap: () {
+            setState(() {
+              _selected = elem;
+            });
+            widget.selectionCallback(elem);
+          },
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 250),
+            width: elem.toString() == "NO" ? 40 : width,
+            height: 25,
+            decoration: BoxDecoration(
+              color: _containerColor(sel, hover),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Center(
+              child: Text(
+                elem.toString(),
+                style: TextStyle(
+                  color: _textColor(sel, hover),
+                ),
+              ),
             ),
           ),
         ),

@@ -110,6 +110,7 @@ class _ValueRadioState<T> extends State<ValueRadio<T>> {
               hintStyle: const TextStyle(
                 color: Colors.grey,
                 fontSize: 14,
+                fontStyle: FontStyle.italic,
               ),
             ),
           ),
