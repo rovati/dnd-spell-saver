@@ -50,4 +50,48 @@ class AppThemeData {
     onSurfaceVariant: Color(0xFFdee2e6),
     outline: Color(0xFFaaafb3),
   );
+
+  static Color containerColor(bool isSelected, bool isHovering) {
+    if (isSelected) {
+      return lightColorScheme.primary;
+    } else {
+      if (isHovering) {
+        return lightColorScheme.primaryContainer;
+      } else {
+        return lightColorScheme.surface;
+      }
+    }
+  }
+
+  static Color valueContainerColor(bool isSelected) {
+    if (isSelected) {
+      return lightColorScheme.primary;
+    } else {
+      return lightColorScheme.surface;
+    }
+  }
+
+  static Color valueContainerBorderColor(bool isSelected, bool isHovering) {
+    if (isSelected) {
+      return lightColorScheme.primary;
+    } else {
+      if (isHovering) {
+        return lightColorScheme.primaryContainer;
+      } else {
+        return lightColorScheme.surface;
+      }
+    }
+  }
+
+  static Color textColor(bool isSelected, bool isHovering) {
+    if (isSelected) {
+      return AppThemeData.lightColorScheme.onPrimary;
+    } else {
+      if (isHovering) {
+        return AppThemeData.lightColorScheme.onPrimaryContainer;
+      } else {
+        return AppThemeData.lightColorScheme.onSurface;
+      }
+    }
+  }
 }

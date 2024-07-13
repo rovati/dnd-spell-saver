@@ -25,30 +25,6 @@ class _SimpleRadioState<T> extends State<SimpleRadio<T>> {
   T? _selected;
   T? _hovering;
 
-  Color _containerColor(bool selected, bool hovering) {
-    if (selected) {
-      return AppThemeData.lightColorScheme.primary;
-    } else {
-      if (hovering) {
-        return AppThemeData.lightColorScheme.primaryContainer;
-      } else {
-        return AppThemeData.lightColorScheme.onSurface;
-      }
-    }
-  }
-
-  Color _textColor(bool selected, bool hovering) {
-    if (selected) {
-      return AppThemeData.lightColorScheme.onPrimary;
-    } else {
-      if (hovering) {
-        return AppThemeData.lightColorScheme.onPrimaryContainer;
-      } else {
-        return AppThemeData.lightColorScheme.onSurface;
-      }
-    }
-  }
-
   Widget _radioTile(T elem, double width) {
     bool sel = _selected != null && _selected == elem;
     bool hover = _hovering != null && _hovering == elem;
@@ -77,14 +53,14 @@ class _SimpleRadioState<T> extends State<SimpleRadio<T>> {
             width: elem.toString() == "NO" ? 40 : width,
             height: 25,
             decoration: BoxDecoration(
-              color: _containerColor(sel, hover),
+              color: AppThemeData.containerColor(sel, hover),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Center(
               child: Text(
                 elem.toString(),
                 style: TextStyle(
-                  color: _textColor(sel, hover),
+                  color: AppThemeData.textColor(sel, hover),
                 ),
               ),
             ),

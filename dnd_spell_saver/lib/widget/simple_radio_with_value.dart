@@ -1,3 +1,4 @@
+import 'package:dnd_spell_saver/util/theme_data.dart';
 import 'package:flutter/material.dart';
 
 class SimpleRadioWithValue<T> extends StatefulWidget {
@@ -25,37 +26,50 @@ class SimpleRadioWithValue<T> extends StatefulWidget {
 
 class _SimpleRadioWithValueState<T> extends State<SimpleRadioWithValue<T>> {
   T? _selected;
+  bool? _valueSelected;
+  T? _hovering;
+  bool? _hoveringValue;
   String? _value;
 
-  Widget _simpleRadioTile(T elem, double width) {
+  Widget _radioTile(T elem, double width) {
+    bool sel = _selected != null && _selected == elem;
+    bool hover = _hovering != null && _hovering == elem;
+
     return Padding(
       padding: const EdgeInsets.only(left: 15),
-      child: GestureDetector(
-        onTap: () {
+      child: MouseRegion(
+        hitTestBehavior: HitTestBehavior.translucent,
+        onEnter: (event) {
           setState(() {
-            _selected = elem;
-            _value = null;
+            _hovering = elem;
           });
-          widget.selectionCallback(elem);
         },
-        child: Container(
-          width: elem.toString() == "NO" ? 40 : widget.tileWidth,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-                width: 2,
-                color: _selected == elem
-                    ? Theme.of(context).primaryColor
-                    : Colors.transparent),
-          ),
-          child: Center(
-            child: Text(
-              elem.toString(),
-              style: TextStyle(
-                  color: _selected == elem
-                      ? Theme.of(context).primaryColor
-                      : Colors.grey),
+        onExit: (event) => (setState(() {
+          _hovering = null;
+        })),
+        child: GestureDetector(
+          onTap: () {
+            setState(() {
+              _selected = elem;
+              _valueSelected = false;
+            });
+            widget.selectionCallback(elem);
+          },
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 250),
+            width: elem.toString() == "NO" ? 40 : width,
+            height: 25,
+            decoration: BoxDecoration(
+              color: AppThemeData.containerColor(sel, hover),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Center(
+              child: Text(
+                elem.toString(),
+                style: TextStyle(
+                  color: AppThemeData.textColor(sel, hover),
+                ),
+              ),
             ),
           ),
         ),
@@ -63,39 +77,56 @@ class _SimpleRadioWithValueState<T> extends State<SimpleRadioWithValue<T>> {
     );
   }
 
-  Widget _valueRadioTile() {
+  Widget _valueRadioTile(double width) {
+    bool sel = _valueSelected ?? false;
+    bool hover = _hoveringValue ?? false;
+
     return Padding(
       padding: const EdgeInsets.only(left: 15),
-      child: Container(
-        width: widget.tileWidth,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(
+      child: MouseRegion(
+        hitTestBehavior: HitTestBehavior.translucent,
+        onEnter: (event) {
+          setState(() {
+            _hoveringValue = true;
+          });
+        },
+        onExit: (event) => (setState(() {
+          _hoveringValue = false;
+        })),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          width: width,
+          height: 25,
+          decoration: BoxDecoration(
+            color: AppThemeData.valueContainerColor(sel),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: AppThemeData.valueContainerBorderColor(sel, hover),
               width: 2,
-              color: _selected == null && _value != null && _value!.isNotEmpty
-                  ? Theme.of(context).primaryColor
-                  : Colors.transparent),
-        ),
-        child: SizedBox(
-          height: 20,
+            ),
+          ),
           child: Center(
             child: TextField(
               textAlign: TextAlign.center,
+              onTap: () => setState(() {
+                _selected = null;
+                _valueSelected = _value != null && _value!.isNotEmpty;
+              }),
               onChanged: (text) {
                 setState(() {
                   _selected = null;
+                  _valueSelected = text.isNotEmpty;
                   _value = text;
                 });
                 widget.valueCallback(_value ?? "");
               },
               style: TextStyle(
-                  color:
-                      _selected == null && _value != null && _value!.isNotEmpty
-                          ? Theme.of(context).primaryColor
-                          : Colors.grey),
+                color: AppThemeData.textColor(sel, hover),
+              ),
               decoration: InputDecoration(
                 border: InputBorder.none,
+                contentPadding: const EdgeInsets.all(0),
+                isDense: true,
                 hintText: widget.hint,
                 hintStyle: const TextStyle(
                   color: Colors.grey,
@@ -133,10 +164,10 @@ class _SimpleRadioWithValueState<T> extends State<SimpleRadioWithValue<T>> {
                 mainAxisSize: MainAxisSize.max,
                 children: widget.labels
                         .map(
-                          (e) => _simpleRadioTile(e, widget.tileWidth),
+                          (e) => _radioTile(e, widget.tileWidth),
                         )
                         .toList() +
-                    [_valueRadioTile()],
+                    [_valueRadioTile(widget.tileWidth)],
               ),
             ),
           ],
