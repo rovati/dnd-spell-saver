@@ -1,8 +1,10 @@
+import 'package:dnd_spell_saver/util/theme_data.dart';
 import 'package:flutter/material.dart';
 
 class MultiChoiceRadio<T> extends StatefulWidget {
   final String title;
   final List<T> labels;
+  final List<T> labelsRequiringValue;
   final double tileWidth;
   final double valueTileWidth;
   final String hint;
@@ -15,6 +17,7 @@ class MultiChoiceRadio<T> extends StatefulWidget {
       {super.key,
       required this.title,
       required this.labels,
+      required this.labelsRequiringValue,
       required this.tileWidth,
       required this.hint,
       required this.selectionCallback,
@@ -30,46 +33,47 @@ class MultiChoiceRadio<T> extends StatefulWidget {
 class _MultiChoiceRadioState<T> extends State<MultiChoiceRadio<T>> {
   final List<T> _selected = [];
   String? _value;
+  T? _hovering;
+  bool? _hoveringValue;
 
-  Widget _simpleRadioTile(T elem, double width) {
+  Widget _radioTile(T elem, double width) {
+    bool sel = _selected.contains(elem);
+    bool hover = _hovering != null && _hovering == elem;
+
     return Padding(
       padding: const EdgeInsets.only(left: 15),
-      child: GestureDetector(
-        onTap: () {
-          if (_selected.contains(elem)) {
-            _selected.remove(elem);
-            widget.deselectionCallback(elem);
-          } else {
-            if (elem.toString() == "NO") {
-              for (var e in _selected) {
-                widget.deselectionCallback(e);
-              }
-              _selected.clear();
-            }
-            _selected.add(elem);
-            widget.selectionCallback(elem);
-          }
-
-          setState(() {});
+      child: MouseRegion(
+        hitTestBehavior: HitTestBehavior.translucent,
+        onEnter: (event) {
+          setState(() {
+            _hovering = elem;
+          });
         },
-        child: Container(
-          width: elem.toString() == "NO" ? 40 : widget.tileWidth,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-                width: 2,
-                color: _selected.contains(elem)
-                    ? Theme.of(context).primaryColor
-                    : Colors.transparent),
-          ),
-          child: Center(
-            child: Text(
-              elem.toString(),
-              style: TextStyle(
-                  color: _selected.contains(elem)
-                      ? Theme.of(context).primaryColor
-                      : Colors.grey),
+        onExit: (event) => (setState(() {
+          _hovering = null;
+        })),
+        child: GestureDetector(
+          onTap: () {
+            setState(() {
+              _selected.add(elem);
+            });
+            widget.selectionCallback(elem);
+          },
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 250),
+            width: elem.toString() == "NO" ? 40 : width,
+            height: 25,
+            decoration: BoxDecoration(
+              color: AppThemeData.containerColor(sel, hover),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Center(
+              child: Text(
+                elem.toString(),
+                style: TextStyle(
+                  color: AppThemeData.textColor(sel, hover),
+                ),
+              ),
             ),
           ),
         ),
@@ -154,7 +158,7 @@ class _MultiChoiceRadioState<T> extends State<MultiChoiceRadio<T>> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.max,
                 children: widget.labels
-                        .map((e) => _simpleRadioTile(e, widget.tileWidth))
+                        .map((e) => _radioTile(e, widget.tileWidth))
                         .toList() +
                     [
                       Padding(

@@ -230,7 +230,7 @@ class _AddSpellPageState extends State<AddSpellPage> {
         padding: 10,
         child: Card(
           elevation: 7,
-          surfaceTintColor: AppThemeData.lightColorScheme.background,
+          surfaceTintColor: AppThemeData.lightColorScheme.surface,
           child: SizedBox(
             width: 710,
             child: Padding(
@@ -447,6 +447,8 @@ class _AddSpellPageState extends State<AddSpellPage> {
                           child: MultiChoiceRadio(
                             title: 'COMPONENTI',
                             labels: Component.values,
+                            labelsRequiringValue:
+                                Component.labelsRequiringValue(),
                             tileWidth: 30,
                             hint: Component.hint,
                             selectionCallback: (val) {

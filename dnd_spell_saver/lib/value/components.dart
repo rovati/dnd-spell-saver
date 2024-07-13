@@ -1,10 +1,11 @@
 enum Component {
-  verbal('v'),
-  somatic('s'),
-  material('m');
+  verbal('v', false),
+  somatic('s', false),
+  material('m', true);
 
-  const Component(this.label);
+  const Component(this.label, this.requiresValue);
   final String label;
+  final bool requiresValue;
   static const String hint = "materiale";
 
   static List<Component> fromLabels(String labels) {
@@ -17,6 +18,16 @@ enum Component {
     for (String v in vals) {
       Component? c = map[v.trim()];
       if (c != null) components.add(c);
+    }
+    return components;
+  }
+
+  static List<Component> labelsRequiringValue() {
+    List<Component> components = [];
+    for (Component c in Component.values) {
+      if (c.requiresValue) {
+        components.add(c);
+      }
     }
     return components;
   }
