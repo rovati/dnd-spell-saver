@@ -32,7 +32,7 @@ class _SimpleRadioState<T> extends State<SimpleRadio<T>> {
       if (hovering) {
         return AppThemeData.lightColorScheme.primaryContainer;
       } else {
-        return AppThemeData.lightColorScheme.background;
+        return AppThemeData.lightColorScheme.onSurface;
       }
     }
   }
@@ -44,7 +44,7 @@ class _SimpleRadioState<T> extends State<SimpleRadio<T>> {
       if (hovering) {
         return AppThemeData.lightColorScheme.onPrimaryContainer;
       } else {
-        return AppThemeData.lightColorScheme.onBackground;
+        return AppThemeData.lightColorScheme.onSurface;
       }
     }
   }

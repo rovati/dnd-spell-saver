@@ -2,7 +2,7 @@ enum School {
   abjuration('Abiurazione'),
   enchantment('Ammaliamento'),
   divination('Divinazione'),
-  evocation('Evocatione'),
+  evocation('Evocazione'),
   illusion('Illusione'),
   conjuration('Invocazione'),
   necromancy('Necromanzia'),

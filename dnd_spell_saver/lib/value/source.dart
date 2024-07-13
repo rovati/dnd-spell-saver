@@ -1,8 +1,9 @@
 enum Source {
   playerHandbook('phb'),
-  xanathar('xanathar'),
+  xanathar('x\'thar'),
   tashasCauldron('tasha'),
   swordCoast('sc'),
+  homebrew('hb'),
   other('altro');
 
   const Source(this.label);
