@@ -9,6 +9,7 @@ enum SavingThrow {
 
   const SavingThrow(this.label);
   final String label;
+  static const String title = 'TIRO SALVEZZA';
 
   static SavingThrow? fromLabel(String label) {
     Map<String, SavingThrow> map = {for (SavingThrow v in values) v.label: v};

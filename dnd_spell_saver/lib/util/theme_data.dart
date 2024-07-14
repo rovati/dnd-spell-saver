@@ -21,7 +21,7 @@ class AppThemeData {
     onErrorContainer: Color(0xFF331312),
     surface: Color(0xFFfcfcfc),
     onSurface: Color(0xFF323333),
-    surfaceVariant: Color(0xFFe0e3e6),
+    surfaceContainerHighest: Color(0xFFe0e3e6),
     onSurfaceVariant: Color(0xFF5e6366),
     outline: Color(0xFF8d9499),
   );
@@ -46,7 +46,7 @@ class AppThemeData {
     onErrorContainer: Color(0xFFE6B8B6),
     surface: Color(0xFF323333),
     onSurface: Color(0xFFe4e5e6),
-    surfaceVariant: Color(0xFF5e6366),
+    surfaceContainerHighest: Color(0xFF5e6366),
     onSurfaceVariant: Color(0xFFdee2e6),
     outline: Color(0xFFaaafb3),
   );
@@ -85,13 +85,17 @@ class AppThemeData {
 
   static Color textColor(bool isSelected, bool isHovering) {
     if (isSelected) {
-      return AppThemeData.lightColorScheme.onPrimary;
+      return lightColorScheme.onPrimary;
     } else {
       if (isHovering) {
-        return AppThemeData.lightColorScheme.onPrimaryContainer;
+        return lightColorScheme.onPrimaryContainer;
       } else {
-        return AppThemeData.lightColorScheme.onSurface;
+        return lightColorScheme.onSurface;
       }
     }
+  }
+
+  static Color dropdownEntryColor(bool isSelected) {
+    return isSelected ? lightColorScheme.primary : lightColorScheme.onPrimary;
   }
 }

@@ -7,6 +7,7 @@ enum Component {
   final String label;
   final bool requiresValue;
   static const String hint = "materiale";
+  static const String title = "COMPONENTI";
 
   static List<Component> fromLabels(String labels) {
     Map<String, Component> map = {for (Component v in values) v.label: v};

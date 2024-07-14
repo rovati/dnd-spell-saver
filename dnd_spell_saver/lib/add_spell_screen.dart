@@ -33,113 +33,27 @@ class AddSpellPage extends StatefulWidget {
 
 class _AddSpellPageState extends State<AddSpellPage> {
   SpellList? _spellList = SpellList.mock();
+  final Spell _spell = Spell();
 
   final _titleController = TextEditingController();
   final _enTitleController = TextEditingController();
-  final _schoolController = TextEditingController();
-  final _spellLevelController = TextEditingController();
   final _bodyController = TextEditingController();
   final _higherLevelsController = TextEditingController();
 
-  Source? _source;
-  SpellLevel? _spellLevel;
-  School? _school;
-  bool _concentration = false;
-  bool _ritual = false;
-  CastingTime? _castingTime;
-  String? _strCastingTime;
-  Range? _range;
-  String? _strRange;
-  Duration? _duration;
-  String? _strDuration;
-  final List<Component> _components = [];
-  String? _material;
-  AreaOfEffect? _area;
-  String? _dimAoE;
-  SavingThrow? _savingThrow;
-
   void _addSpell() {
-    // TODO validation
-    List<String> errorFields = [];
+    _spell.title = _titleController.value.text;
+    _spell.sndTitle = _enTitleController.value.text;
+    _spell.body = _bodyController.value.text;
+    _spell.atHigherLevels = _higherLevelsController.value.text;
 
-    if (_titleController.value.text.isEmpty) {
-      errorFields.add('\'TITOLO\' è vuoto.');
-    }
-    if (_enTitleController.value.text.isEmpty) {
-      errorFields.add('\'TITOLO ENG\' è vuoto.');
-    }
-    if (_source == null) {
-      errorFields.add('\'FONTE\' non è selezionato.');
-    }
-    if (_spellLevel == null) {
-      errorFields.add('\'LIVELLO\' non è selezionato.');
-    }
-    if (_school == null) {
-      errorFields.add('\'SCUOLA\' non è selezionato.');
-    }
-    if (_castingTime == null && _strCastingTime == null) {
-      errorFields.add('\'TEMPO DI LANCIO\' non è selezionato.');
-    } else if (_castingTime == null && _strCastingTime!.isEmpty) {
-      errorFields.add(
-          '\'TEMPO DI LANCIO\' ha un valore non default, ma il valore è vuoto.');
-    }
-    if (_range == null && _strRange == null) {
-      errorFields.add('\'GITTATA\' non è selezionato.');
-    } else if (_range == null && _strRange!.isEmpty) {
-      errorFields
-          .add('\'GITTATA\' ha un valore non default, ma il valore è vuoto.');
-    }
-    if (_duration == null && _strDuration == null) {
-      errorFields.add('\'DURATA\' non è selezionato.');
-    } else if (_duration == null && _strDuration!.isEmpty) {
-      errorFields
-          .add('\'DURATA\' ha un valore non default, ma il valore è vuoto.');
-    }
-    if (_components.contains(Component.material) &&
-        (_material == null || _material!.isEmpty)) {
-      errorFields
-          .add('\'COMPONENTI\' contiene Materiale ma non specifica quale.');
-    }
-    if (_area == null) {
-      errorFields.add('\'AREA\' non è selezionato.');
-    } else if (_area != AreaOfEffect.none &&
-        (_dimAoE == null || _dimAoE!.isEmpty)) {
-      errorFields
-          .add('\'AREA\' ha un tipo di area ma non specifica la dimensione.');
-    }
-    if (_savingThrow == null) {
-      errorFields.add('\'TIRO SLAVEZZA\' non è selezionato.');
-    }
-    if (_bodyController.value.text.isEmpty) {
-      errorFields.add('\'DESCRIZIONE\' è vuoto.');
-    }
+    var (ok, errors) = _spell.validate();
 
-    if (errorFields.isNotEmpty) {
-      _showErrorDialog(errorFields);
+    if (!ok) {
+      _showErrorDialog(errors);
       return;
     }
 
-    var spell = Spell(
-      _titleController.value.text,
-      _enTitleController.value.text,
-      _source!,
-      _spellLevel!,
-      _school!,
-      _concentration,
-      _ritual,
-      _castingTime != null ? _castingTime!.label : _strCastingTime!,
-      _range != null ? _range!.label : _strRange!,
-      _duration != null ? _duration!.label : _strDuration!,
-      _components,
-      _material ?? "",
-      _area!,
-      _dimAoE ?? "",
-      _savingThrow!,
-      _bodyController.value.text,
-      _higherLevelsController.value.text,
-    );
-
-    _spellList!.addSpell(spell);
+    _spellList!.addSpell(_spell);
     _showSuccessDialog('Incantesimo aggiunto alla lista.').then(
       (value) => Navigator.popAndPushNamed(
         context,
@@ -225,7 +139,7 @@ class _AddSpellPageState extends State<AddSpellPage> {
     });*/
 
     return Scaffold(
-      backgroundColor: AppThemeData.lightColorScheme.surfaceVariant,
+      backgroundColor: AppThemeData.lightColorScheme.surfaceContainerHighest,
       body: CenteredScrollable(
         padding: 10,
         child: Card(
@@ -249,105 +163,28 @@ class _AddSpellPageState extends State<AddSpellPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Column(
                       children: [
-                        // livello scuola
+                        // livello
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Card(
-                            elevation: 2,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                const SizedBox(
-                                  width: 60,
-                                  child: Text(
-                                    "LIVELLO:",
-                                    textAlign: TextAlign.right,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 15),
-                                  child: DropdownMenu<SpellLevel>(
-                                    width: 200,
-                                    hintText: "SELEZIONA",
-                                    controller: _spellLevelController,
-                                    requestFocusOnTap: true,
-                                    enableSearch: false,
-                                    onSelected: (SpellLevel? level) {
-                                      setState(() {
-                                        _spellLevel = level;
-                                      });
-                                    },
-                                    inputDecorationTheme:
-                                        const InputDecorationTheme(
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      enabledBorder: InputBorder.none,
-                                    ),
-                                    textStyle: const TextStyle(
-                                        color: Colors.grey, fontSize: 14),
-                                    dropdownMenuEntries: SpellLevel.values
-                                        .map<DropdownMenuEntry<SpellLevel>>(
-                                            (SpellLevel level) {
-                                      return DropdownMenuEntry<SpellLevel>(
-                                        value: level,
-                                        label: level.label,
-                                        style: MenuItemButton.styleFrom(
-                                            foregroundColor: level ==
-                                                    _spellLevel
-                                                ? Theme.of(context).primaryColor
-                                                : Colors.grey,
-                                            backgroundColor: Colors.white),
-                                      );
-                                    }).toList(),
-                                  ),
-                                ),
-                                const Expanded(child: SizedBox()),
-                                const SizedBox(
-                                  width: 60,
-                                  child: Text(
-                                    "SCUOLA:",
-                                    textAlign: TextAlign.right,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 15),
-                                  child: DropdownMenu<School>(
-                                    width: 200,
-                                    hintText: "SELEZIONA",
-                                    controller: _schoolController,
-                                    requestFocusOnTap: true,
-                                    enableSearch: false,
-                                    onSelected: (School? school) {
-                                      setState(() {
-                                        _school = school;
-                                      });
-                                    },
-                                    inputDecorationTheme:
-                                        const InputDecorationTheme(
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      enabledBorder: InputBorder.none,
-                                    ),
-                                    textStyle: const TextStyle(
-                                        color: Colors.grey, fontSize: 14),
-                                    dropdownMenuEntries: School.values
-                                        .map<DropdownMenuEntry<School>>(
-                                            (School school) {
-                                      return DropdownMenuEntry<School>(
-                                        value: school,
-                                        label: school.label,
-                                        style: MenuItemButton.styleFrom(
-                                            foregroundColor: school == _school
-                                                ? Theme.of(context).primaryColor
-                                                : Colors.grey,
-                                            backgroundColor: Colors.white),
-                                      );
-                                    }).toList(),
-                                  ),
-                                ),
-                              ],
-                            ),
+                          padding: const EdgeInsets.only(top: 5),
+                          child: SimpleRadio<SpellLevel>(
+                            title: SpellLevel.title,
+                            labels: SpellLevel.values,
+                            tileWidth: 50,
+                            selectionCallback: (val) {
+                              _spell.level = val;
+                            },
+                          ),
+                        ),
+                        // scuola
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: SimpleRadio<School>(
+                            title: School.title,
+                            labels: School.values,
+                            tileWidth: 50,
+                            selectionCallback: (val) {
+                              _spell.school = val;
+                            },
                           ),
                         ),
                         // concentrazione, rituale
@@ -362,30 +199,30 @@ class _AddSpellPageState extends State<AddSpellPage> {
                                 const SizedBox(
                                   width: 130,
                                   child: Text(
-                                    "CONCENTRAZIONE:",
+                                    '${Spell.concentrationTitle}:',
                                     textAlign: TextAlign.right,
                                   ),
                                 ),
                                 Checkbox(
-                                  value: _concentration,
+                                  value: _spell.concentration,
                                   onChanged: (val) {
                                     setState(() {
-                                      _concentration = val!;
+                                      _spell.concentration = val!;
                                     });
                                   },
                                 ),
                                 const SizedBox(
                                   width: 130,
                                   child: Text(
-                                    "RITUALE:",
+                                    '${Spell.ritualTitle}:',
                                     textAlign: TextAlign.right,
                                   ),
                                 ),
                                 Checkbox(
-                                  value: _ritual,
+                                  value: _spell.ritual,
                                   onChanged: (val) {
                                     setState(() {
-                                      _ritual = val!;
+                                      _spell.ritual = val!;
                                     });
                                   },
                                 ),
@@ -397,15 +234,15 @@ class _AddSpellPageState extends State<AddSpellPage> {
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: SimpleRadioWithValue<CastingTime>(
-                            title: 'TEMPO DI LANCIO',
+                            title: CastingTime.title,
                             labels: CastingTime.values,
                             tileWidth: 90,
                             hint: CastingTime.hint,
                             selectionCallback: (val) {
-                              _castingTime = val;
+                              _spell.castingTime = val.label;
                             },
                             valueCallback: (strVal) {
-                              _strCastingTime = strVal;
+                              _spell.castingTime = strVal;
                             },
                           ),
                         ),
@@ -413,15 +250,15 @@ class _AddSpellPageState extends State<AddSpellPage> {
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: SimpleRadioWithValue<Range>(
-                            title: 'GITTATA',
+                            title: Range.title,
                             labels: Range.values,
                             tileWidth: 150,
                             hint: Range.hint,
                             selectionCallback: (val) {
-                              _range = val;
+                              _spell.range = val.label;
                             },
                             valueCallback: (strVal) {
-                              _strRange = strVal;
+                              _spell.range = strVal;
                             },
                           ),
                         ),
@@ -429,15 +266,15 @@ class _AddSpellPageState extends State<AddSpellPage> {
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: SimpleRadioWithValue<Duration>(
-                            title: 'DURATA',
+                            title: Duration.title,
                             labels: Duration.values,
                             tileWidth: 220,
                             hint: Duration.hint,
                             selectionCallback: (val) {
-                              _duration = val;
+                              _spell.duration = val.label;
                             },
                             valueCallback: (strVal) {
-                              _strDuration = strVal;
+                              _spell.duration = strVal;
                             },
                           ),
                         ),
@@ -445,22 +282,21 @@ class _AddSpellPageState extends State<AddSpellPage> {
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: MultiChoiceRadio(
-                            title: 'COMPONENTI',
+                            title: Component.title,
                             labels: Component.values,
                             labelsRequiringValue:
                                 Component.labelsRequiringValue(),
                             tileWidth: 30,
                             hint: Component.hint,
                             selectionCallback: (val) {
-                              _components.add(val);
+                              _spell.components.add(val);
                             },
                             deselectionCallback: (val) {
-                              _components.remove(val);
+                              _spell.components.remove(val);
                             },
                             valueCallback: (strVal) {
-                              _material = strVal;
+                              _spell.materialC = strVal;
                             },
-                            valueBound: const [Component.material],
                             valueTileWidth: 370,
                           ),
                         ),
@@ -468,7 +304,7 @@ class _AddSpellPageState extends State<AddSpellPage> {
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: ValueRadio<AreaOfEffect>(
-                            title: 'AREA',
+                            title: AreaOfEffect.title,
                             labels: AreaOfEffect.values,
                             labelsRequiringValue:
                                 AreaOfEffect.labelsRequiringValue(),
@@ -476,10 +312,10 @@ class _AddSpellPageState extends State<AddSpellPage> {
                             valueTileWidth: 100,
                             hint: AreaOfEffect.hint,
                             selectionCallback: (val) {
-                              _area = val;
+                              _spell.aoe = val;
                             },
                             valueCallback: (strVal) {
-                              _dimAoE = strVal;
+                              _spell.aoeDim = strVal;
                             },
                           ),
                         ),
@@ -487,11 +323,11 @@ class _AddSpellPageState extends State<AddSpellPage> {
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: SimpleRadio<SavingThrow>(
-                            title: 'TIRO SALVEZZA',
+                            title: SavingThrow.title,
                             labels: SavingThrow.values,
                             tileWidth: 60,
                             selectionCallback: (val) {
-                              _savingThrow = val;
+                              _spell.savingThrow = val;
                             },
                           ),
                         ),
@@ -499,11 +335,11 @@ class _AddSpellPageState extends State<AddSpellPage> {
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: SimpleRadio<Source>(
-                            title: 'FONTE',
+                            title: Source.title,
                             labels: Source.values,
                             tileWidth: 70,
                             selectionCallback: (val) {
-                              _source = val;
+                              _spell.source = val;
                             },
                           ),
                         ),

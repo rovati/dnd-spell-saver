@@ -6,25 +6,30 @@ import 'package:dnd_spell_saver/value/school.dart';
 import 'package:dnd_spell_saver/value/source.dart';
 
 class Spell {
-  final String title;
-  final String sndTitle;
-  final Source source;
-  final SpellLevel level;
-  final School school;
-  final bool concentration;
-  final bool ritual;
-  final String castingTime;
-  final String range;
-  final String duration;
-  final List<Component> components;
-  final String materialC;
-  final AreaOfEffect aoe;
-  final String aoeDim;
-  final SavingThrow savingThrow;
-  final String body;
-  final String atHigherLevels;
+  static const concentrationTitle = 'CONCENTRATIONE';
+  static const ritualTitle = "RITUALE";
 
-  Spell(
+  String? title;
+  String sndTitle = '';
+  Source? source;
+  SpellLevel? level;
+  School? school;
+  bool concentration = false;
+  bool ritual = false;
+  String? castingTime;
+  String? range;
+  String? duration;
+  List<Component> components = [];
+  String? materialC;
+  AreaOfEffect? aoe;
+  String? aoeDim;
+  SavingThrow? savingThrow;
+  String? body;
+  String atHigherLevels = '';
+
+  Spell();
+
+  Spell.fromVals(
     this.title,
     this.sndTitle,
     this.source,
@@ -106,7 +111,7 @@ class Spell {
     }
     String higherLevels = row[16];
 
-    return Spell(
+    return Spell.fromVals(
         title,
         sndTitle,
         source,
@@ -130,9 +135,9 @@ class Spell {
     return [
       title,
       sndTitle,
-      source.label,
-      level.label,
-      school.label,
+      source!.label,
+      level!.label,
+      school!.label,
       concentration,
       ritual,
       castingTime,
@@ -146,5 +151,60 @@ class Spell {
       body,
       atHigherLevels
     ];
+  }
+
+  (bool, List<String>) validate() {
+    List<String> errorFields = [];
+
+    if (title == null || title!.isEmpty) {
+      errorFields.add('\'TITOLO\' è vuoto.');
+    }
+    if (source == null) {
+      errorFields.add('\'FONTE\' non è selezionato.');
+    }
+    if (level == null) {
+      errorFields.add('\'LIVELLO\' non è selezionato.');
+    }
+    if (school == null) {
+      errorFields.add('\'SCUOLA\' non è selezionato.');
+    }
+    if (castingTime == null) {
+      errorFields.add('\'TEMPO DI LANCIO\' non è selezionato.');
+    } else if (castingTime!.isEmpty) {
+      errorFields.add(
+          '\'TEMPO DI LANCIO\' ha un valore non default, ma il valore è vuoto.');
+    }
+    if (range == null) {
+      errorFields.add('\'GITTATA\' non è selezionato.');
+    } else if (range!.isEmpty) {
+      errorFields
+          .add('\'GITTATA\' ha un valore non default, ma il valore è vuoto.');
+    }
+    if (duration == null) {
+      errorFields.add('\'DURATA\' non è selezionato.');
+    } else if (duration!.isEmpty) {
+      errorFields
+          .add('\'DURATA\' ha un valore non default, ma il valore è vuoto.');
+    }
+    if (components.contains(Component.material) &&
+        (materialC == null || materialC!.isEmpty)) {
+      errorFields
+          .add('\'COMPONENTI\' contiene Materiale ma non specifica quale.');
+    }
+    if (aoe == null) {
+      errorFields.add('\'AREA\' non è selezionato.');
+    } else if (aoe != AreaOfEffect.none &&
+        (aoeDim == null || aoeDim!.isEmpty)) {
+      errorFields
+          .add('\'AREA\' ha un tipo di area ma non specifica la dimensione.');
+    }
+    if (savingThrow == null) {
+      errorFields.add('\'TIRO SLAVEZZA\' non è selezionato.');
+    }
+    if (body == null) {
+      errorFields.add('\'DESCRIZIONE\' è vuoto.');
+    }
+
+    return (errorFields.isEmpty, errorFields);
   }
 }

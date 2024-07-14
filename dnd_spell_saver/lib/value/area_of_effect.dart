@@ -8,7 +8,8 @@ enum AreaOfEffect {
   const AreaOfEffect(this.label, this.requriesValue);
   final String label;
   final bool requriesValue;
-  static const String hint = "dim.";
+  static const String hint = 'dim.';
+  static const String title = 'AREA';
 
   static AreaOfEffect? fromLabel(String label) {
     Map<String, AreaOfEffect> map = {for (AreaOfEffect v in values) v.label: v};

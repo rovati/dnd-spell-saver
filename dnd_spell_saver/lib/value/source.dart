@@ -8,6 +8,7 @@ enum Source {
 
   const Source(this.label);
   final String label;
+  static const String title = 'FONTE';
 
   static Source? fromLabel(String label) {
     Map<String, Source> map = {for (Source v in values) v.label: v};

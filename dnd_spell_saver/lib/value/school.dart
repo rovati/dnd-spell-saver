@@ -1,15 +1,17 @@
 enum School {
-  abjuration('Abiurazione'),
-  enchantment('Ammaliamento'),
-  divination('Divinazione'),
-  evocation('Evocazione'),
-  illusion('Illusione'),
-  conjuration('Invocazione'),
-  necromancy('Necromanzia'),
-  transmutation('Transmutazione');
+  abjuration('Abiurazione', 'AB'),
+  enchantment('Ammaliamento', 'AM'),
+  divination('Divinazione', 'DI'),
+  evocation('Evocazione', 'EV'),
+  illusion('Illusione', 'IL'),
+  conjuration('Invocazione', 'IN'),
+  necromancy('Necromanzia', 'NE'),
+  transmutation('Transmutazione', 'TR');
 
-  const School(this.label);
+  const School(this.label, this.shortHand);
   final String label;
+  final String shortHand;
+  static const String title = 'SCUOLA';
 
   static School? fromLabel(String label) {
     Map<String, School> map = {for (School v in values) v.label: v};
@@ -19,5 +21,5 @@ enum School {
   }
 
   @override
-  String toString() => label.toUpperCase();
+  String toString() => shortHand;
 }
