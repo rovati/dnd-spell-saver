@@ -470,6 +470,8 @@ class _AddSpellPageState extends State<AddSpellPage> {
                           child: ValueRadio<AreaOfEffect>(
                             title: 'AREA',
                             labels: AreaOfEffect.values,
+                            labelsRequiringValue:
+                                AreaOfEffect.labelsRequiringValue(),
                             tileWidth: 70,
                             valueTileWidth: 100,
                             hint: AreaOfEffect.hint,

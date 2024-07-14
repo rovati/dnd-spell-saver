@@ -55,7 +55,11 @@ class _MultiChoiceRadioState<T> extends State<MultiChoiceRadio<T>> {
         child: GestureDetector(
           onTap: () {
             setState(() {
-              _selected.add(elem);
+              if (_selected.contains(elem)) {
+                _selected.remove(elem);
+              } else {
+                _selected.add(elem);
+              }
             });
             widget.selectionCallback(elem);
           },
@@ -81,59 +85,64 @@ class _MultiChoiceRadioState<T> extends State<MultiChoiceRadio<T>> {
     );
   }
 
-  Widget _valueRadioTile() {
-    return Container(
-      width: widget.valueTileWidth,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(
-            width: 2,
-            color: _isValueTileSelected()
-                ? Theme.of(context).primaryColor
-                : Colors.transparent),
-      ),
-      child: SizedBox(
-        height: 20,
-        child: Center(
-          child: TextField(
-            textAlign: TextAlign.center,
-            onChanged: (text) {
-              setState(() {
-                _value = text;
-              });
-              widget.valueCallback(text);
-            },
-            style: TextStyle(
-                color: _isValueTileSelected()
-                    ? Theme.of(context).primaryColor
-                    : Colors.grey),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: widget.hint,
-              hintStyle: const TextStyle(
-                color: Colors.grey,
-                fontSize: 14,
+  Widget _valueRadioTile(double width) {
+    bool required =
+        _selected.any((e) => widget.labelsRequiringValue.contains(e));
+    bool hover = _hoveringValue ?? false;
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 15),
+      child: MouseRegion(
+        hitTestBehavior: HitTestBehavior.translucent,
+        onEnter: (event) {
+          setState(() {
+            _hoveringValue = true;
+          });
+        },
+        onExit: (event) => (setState(() {
+          _hoveringValue = false;
+        })),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          width: width,
+          height: 25,
+          decoration: BoxDecoration(
+            color: AppThemeData.valueContainerColor(
+                required && _value != null && _value!.isNotEmpty),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: AppThemeData.valueContainerBorderColor(required, hover),
+              width: 2,
+            ),
+          ),
+          child: Center(
+            child: TextField(
+              textAlign: TextAlign.center,
+              onChanged: (text) {
+                setState(() {
+                  _value = text;
+                });
+                widget.valueCallback(_value ?? "");
+              },
+              style: TextStyle(
+                color: AppThemeData.textColor(required, hover),
+              ),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.all(0),
+                isDense: true,
+                hintText: widget.hint,
+                hintStyle: const TextStyle(
+                  color: Colors.grey,
+                  fontSize: 14,
+                  fontStyle: FontStyle.italic,
+                ),
               ),
             ),
           ),
         ),
       ),
     );
-  }
-
-  bool _isValueTileSelected() {
-    if (_selected.where((e) => e.toString() == "NO").isNotEmpty) {
-      return false;
-    }
-
-    if (widget.valueBound.isEmpty) {
-      return _value != null && _value!.isNotEmpty;
-    }
-
-    return _value != null &&
-        _value!.isNotEmpty &&
-        widget.valueBound.where((e) => _selected.contains(e)).isNotEmpty;
   }
 
   @override
@@ -160,12 +169,7 @@ class _MultiChoiceRadioState<T> extends State<MultiChoiceRadio<T>> {
                 children: widget.labels
                         .map((e) => _radioTile(e, widget.tileWidth))
                         .toList() +
-                    [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 15),
-                        child: _valueRadioTile(),
-                      ),
-                    ],
+                    [_valueRadioTile(widget.valueTileWidth)],
               ),
             ),
           ],
