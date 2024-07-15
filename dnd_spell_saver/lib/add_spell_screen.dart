@@ -32,13 +32,14 @@ class AddSpellPage extends StatefulWidget {
 }
 
 class _AddSpellPageState extends State<AddSpellPage> {
-  SpellList? _spellList = SpellList.mock();
-  final Spell _spell = Spell();
+  SpellList? _spellList;
 
-  final _titleController = TextEditingController();
-  final _enTitleController = TextEditingController();
-  final _bodyController = TextEditingController();
-  final _higherLevelsController = TextEditingController();
+  late Spell _spell;
+  late bool _isEditing;
+  late TextEditingController _titleController;
+  late TextEditingController _enTitleController;
+  late TextEditingController _bodyController;
+  late TextEditingController _higherLevelsController;
 
   void _addSpell() {
     _spell.title = _titleController.value.text;
@@ -54,7 +55,7 @@ class _AddSpellPageState extends State<AddSpellPage> {
     }
 
     _spellList!.addSpell(_spell);
-    _showSuccessDialog('Incantesimo aggiunto alla lista.').then(
+    _showSuccessDialog('Incantesimo aggiunto alla lista.', 'PROSSIMO').then(
       (value) => Navigator.popAndPushNamed(
         context,
         AddSpellPage.routeName,
@@ -65,17 +66,33 @@ class _AddSpellPageState extends State<AddSpellPage> {
     );
   }
 
+  void _editSpell() {
+    _spell.title = _titleController.value.text;
+    _spell.sndTitle = _enTitleController.value.text;
+    _spell.body = _bodyController.value.text;
+    _spell.atHigherLevels = _higherLevelsController.value.text;
+
+    var (ok, errors) = _spell.validate();
+
+    if (!ok) {
+      _showErrorDialog(errors);
+      return;
+    }
+    _showSuccessDialog('Incantesimo modificato.', 'OK').then(
+      (value) => Navigator.pop(context),
+    );
+  }
+
   void _exportCsv() {
     if (_spellList == null) {
       _showErrorDialog(<String>['Lista incantesimi non ancora pronta.']);
     } else {
-      _spellList!
-          .exportToCsv()
-          .then((value) => _showSuccessDialog('Lista incantesimi esportata.'));
+      _spellList!.exportToCsv().then(
+          (value) => _showSuccessDialog('Lista incantesimi esportata.', 'OK'));
     }
   }
 
-  Future<void> _showSuccessDialog(String msg) async {
+  Future<void> _showSuccessDialog(String msg, String btnText) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -91,7 +108,7 @@ class _AddSpellPageState extends State<AddSpellPage> {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('PROSSIMO'),
+              child: Text(btnText),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -132,12 +149,30 @@ class _AddSpellPageState extends State<AddSpellPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    /*final args = ModalRoute.of(context)!.settings.arguments as ScreenArguments;
-    setState(() {
-      _spellList = args.spellList;
-    });*/
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)!.settings.arguments as ScreenArguments;
+    _spellList = args.spellList;
+    _spell = args.spell ?? Spell();
+    _isEditing = args.spell != null;
+    _titleController = TextEditingController(text: _spell.title);
+    _enTitleController = TextEditingController(text: _spell.sndTitle);
+    _bodyController = TextEditingController(text: _spell.body);
+    _higherLevelsController =
+        TextEditingController(text: _spell.atHigherLevels);
+  }
 
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _enTitleController.dispose();
+    _bodyController.dispose();
+    _higherLevelsController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppThemeData.lightColorScheme.surfaceContainerHighest,
       body: CenteredScrollable(
@@ -169,6 +204,7 @@ class _AddSpellPageState extends State<AddSpellPage> {
                           child: SimpleRadio<SpellLevel>(
                             title: SpellLevel.title,
                             labels: SpellLevel.values,
+                            initalValue: _spell.level,
                             tileWidth: 50,
                             selectionCallback: (val) {
                               _spell.level = val;
@@ -181,6 +217,7 @@ class _AddSpellPageState extends State<AddSpellPage> {
                           child: SimpleRadio<School>(
                             title: School.title,
                             labels: School.values,
+                            initalValue: _spell.school,
                             tileWidth: 50,
                             selectionCallback: (val) {
                               _spell.school = val;
@@ -236,6 +273,9 @@ class _AddSpellPageState extends State<AddSpellPage> {
                           child: SimpleRadioWithValue<CastingTime>(
                             title: CastingTime.title,
                             labels: CastingTime.values,
+                            initialElem:
+                                CastingTime.fromString(_spell.castingTime),
+                            initialValue: _spell.castingTime,
                             tileWidth: 90,
                             hint: CastingTime.hint,
                             selectionCallback: (val) {
@@ -252,6 +292,8 @@ class _AddSpellPageState extends State<AddSpellPage> {
                           child: SimpleRadioWithValue<Range>(
                             title: Range.title,
                             labels: Range.values,
+                            initialElem: Range.fromString(_spell.range),
+                            initialValue: _spell.range,
                             tileWidth: 150,
                             hint: Range.hint,
                             selectionCallback: (val) {
@@ -268,6 +310,8 @@ class _AddSpellPageState extends State<AddSpellPage> {
                           child: SimpleRadioWithValue<Duration>(
                             title: Duration.title,
                             labels: Duration.values,
+                            initialElem: Duration.fromString(_spell.duration),
+                            initialValue: _spell.duration,
                             tileWidth: 220,
                             hint: Duration.hint,
                             selectionCallback: (val) {
@@ -286,6 +330,8 @@ class _AddSpellPageState extends State<AddSpellPage> {
                             labels: Component.values,
                             labelsRequiringValue:
                                 Component.labelsRequiringValue(),
+                            initialElems: _spell.components,
+                            initialValue: _spell.materialC,
                             tileWidth: 30,
                             hint: Component.hint,
                             selectionCallback: (val) {
@@ -308,6 +354,8 @@ class _AddSpellPageState extends State<AddSpellPage> {
                             labels: AreaOfEffect.values,
                             labelsRequiringValue:
                                 AreaOfEffect.labelsRequiringValue(),
+                            initialElem: _spell.aoe,
+                            initalValue: _spell.aoeDim,
                             tileWidth: 70,
                             valueTileWidth: 100,
                             hint: AreaOfEffect.hint,
@@ -367,22 +415,16 @@ class _AddSpellPageState extends State<AddSpellPage> {
                               SizedBox(
                                 width: 170,
                                 child: ElevatedButton(
-                                  onPressed: () => Navigator.pushNamed(
-                                    context,
-                                    ViewSpellsPage.routeName,
-                                    arguments: ScreenArguments(
-                                      _spellList!,
-                                    ),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color.fromARGB(
-                                        255, 220, 226, 233),
-                                  ),
-                                  child: Text(
-                                    "LISTA",
-                                    style: TextStyle(
-                                        color: Theme.of(context).primaryColor),
-                                  ),
+                                  onPressed: () => _isEditing
+                                      ? Navigator.pop(context)
+                                      : Navigator.pushNamed(
+                                          context,
+                                          ViewSpellsPage.routeName,
+                                          arguments: ScreenArguments(
+                                            _spellList!,
+                                          ),
+                                        ),
+                                  child: const Text("LISTA"),
                                 ),
                               ),
                               const SizedBox(
@@ -393,10 +435,17 @@ class _AddSpellPageState extends State<AddSpellPage> {
                                 child: ElevatedButton(
                                   onPressed: _spellList == null
                                       ? null
-                                      : () => _addSpell(),
-                                  child: const Text(
-                                    "AGGIUNGI",
-                                    style: TextStyle(color: Colors.white),
+                                      : _isEditing
+                                          ? () => _editSpell()
+                                          : () => _addSpell(),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppThemeData
+                                          .lightColorScheme.primary),
+                                  child: Text(
+                                    _isEditing ? 'SALVA' : 'AGGIUNGI',
+                                    style: TextStyle(
+                                        color: AppThemeData
+                                            .lightColorScheme.onPrimary),
                                   ),
                                 ),
                               ),
@@ -409,10 +458,7 @@ class _AddSpellPageState extends State<AddSpellPage> {
                                   onPressed: _spellList == null
                                       ? null
                                       : () => _exportCsv(),
-                                  child: const Text(
-                                    "ESPORTA CSV",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
+                                  child: const Text("ESPORTA CSV"),
                                 ),
                               ),
                             ],

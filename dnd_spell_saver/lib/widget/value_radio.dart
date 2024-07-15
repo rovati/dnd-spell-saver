@@ -5,6 +5,8 @@ class ValueRadio<T> extends StatefulWidget {
   final String title;
   final List<T> labels;
   final List<T> labelsRequiringValue;
+  final T? initialElem;
+  final String? initalValue;
   final double tileWidth;
   final double valueTileWidth;
   final bool noTile;
@@ -19,6 +21,8 @@ class ValueRadio<T> extends StatefulWidget {
       required this.title,
       required this.labels,
       required this.labelsRequiringValue,
+      this.initialElem,
+      this.initalValue,
       required this.tileWidth,
       required this.hint,
       required this.selectionCallback,
@@ -37,6 +41,7 @@ class _ValueRadioState<T> extends State<ValueRadio<T>> {
   T? _hovering;
   bool? _hoveringValue;
   String? _value;
+  late TextEditingController _valueController;
 
   Widget _simpleRadioTile(T elem, double width) {
     bool sel = _selected != null && _selected == elem;
@@ -115,12 +120,7 @@ class _ValueRadioState<T> extends State<ValueRadio<T>> {
           child: Center(
             child: TextField(
               textAlign: TextAlign.center,
-              onChanged: (text) {
-                setState(() {
-                  _value = text;
-                });
-                widget.valueCallback(_value ?? "");
-              },
+              controller: _valueController,
               style: TextStyle(
                 color: AppThemeData.textColor(required, hover),
               ),
@@ -140,6 +140,26 @@ class _ValueRadioState<T> extends State<ValueRadio<T>> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _selected = widget.initialElem;
+    _value = widget.labelsRequiringValue.contains(_selected)
+        ? widget.initalValue
+        : null;
+    _valueController = TextEditingController(text: _value ?? '');
+    _valueController.addListener(() {
+      _value = _valueController.text;
+      widget.valueCallback(_value ?? '');
+    });
+  }
+
+  @override
+  void dispose() {
+    _valueController.dispose();
+    super.dispose();
   }
 
   @override

@@ -9,7 +9,7 @@ class Spell {
   static const concentrationTitle = 'CONCENTRATIONE';
   static const ritualTitle = "RITUALE";
 
-  String? title;
+  String title = '';
   String sndTitle = '';
   Source? source;
   SpellLevel? level;
@@ -24,7 +24,7 @@ class Spell {
   AreaOfEffect? aoe;
   String? aoeDim;
   SavingThrow? savingThrow;
-  String? body;
+  String body = '';
   String atHigherLevels = '';
 
   Spell();
@@ -156,7 +156,7 @@ class Spell {
   (bool, List<String>) validate() {
     List<String> errorFields = [];
 
-    if (title == null || title!.isEmpty) {
+    if (title.isEmpty) {
       errorFields.add('\'TITOLO\' è vuoto.');
     }
     if (source == null) {
@@ -201,7 +201,7 @@ class Spell {
     if (savingThrow == null) {
       errorFields.add('\'TIRO SLAVEZZA\' non è selezionato.');
     }
-    if (body == null) {
+    if (body.isEmpty) {
       errorFields.add('\'DESCRIZIONE\' è vuoto.');
     }
 

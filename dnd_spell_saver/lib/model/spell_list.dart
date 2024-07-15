@@ -60,7 +60,7 @@ class SpellList {
 
   static SpellList mock() {
     SpellList sl = SpellList();
-    Spell s1 = Spell(
+    Spell s1 = Spell.fromVals(
       'SALTARE',
       'JUMP',
       Source.playerHandbook,
@@ -79,7 +79,7 @@ class SpellList {
       'L\'incantatore tocca una creatura. La distanza coperta dai salti di quella creatura è triplicata finché l\'incantesimo non termina.',
       '',
     );
-    Spell s2 = Spell(
+    Spell s2 = Spell.fromVals(
       'ASSORBIRE ELEMENTI',
       'ABSORB ELEMENTS',
       Source.playerHandbook,
@@ -98,7 +98,7 @@ class SpellList {
       "L'incantesimo cattura parte dell'energia in arrivo, riducendone l'effetto su di te e immagazzinandola per il tuo prossimo attacco in mischia. Hai resistenza al tipo di danno innescante fino all'inizio del tuo prossimo turno (...)",
       'Il danno extra aumenta di 1d6 per ogni livello dello slot sopra il 1°',
     );
-    Spell s3 = Spell(
+    Spell s3 = Spell.fromVals(
       'INCUTI PAURA',
       'CAUSE FEAR',
       Source.playerHandbook,

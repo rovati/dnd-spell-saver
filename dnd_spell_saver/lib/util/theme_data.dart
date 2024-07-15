@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class AppThemeData {
   static const lightColorScheme = ColorScheme(
     brightness: Brightness.light,
-    primary: Color(0xFF93C4EC),
+    primary: Color(0xFF34ba6e),
     onPrimary: Color(0xFFFFFFFF),
-    primaryContainer: Color(0xFFCAD9E6),
+    primaryContainer: Color.fromARGB(255, 202, 230, 211),
     onPrimaryContainer: Color(0xFF202A33),
     secondary: Color(0xFFD1D0A3),
     onSecondary: Color(0xFFFFFFFF),
@@ -13,17 +13,17 @@ class AppThemeData {
     onSecondaryContainer: Color(0xFF333328),
     tertiary: Color(0xFF242F40),
     onTertiary: Color(0xFFFFFFFF),
-    tertiaryContainer: Color(0xFFC6D2E6),
+    tertiaryContainer: Color.fromARGB(255, 198, 230, 214),
     onTertiaryContainer: Color(0xFF1D2533),
     error: Color(0xFFB0413E),
     onError: Color(0xFFFFFFFF),
     errorContainer: Color(0xFFE6B8B6),
     onErrorContainer: Color(0xFF331312),
     surface: Color(0xFFfcfcfc),
-    onSurface: Color(0xFF323333),
-    surfaceContainerHighest: Color(0xFFe0e3e6),
-    onSurfaceVariant: Color(0xFF5e6366),
-    outline: Color(0xFF8d9499),
+    onSurface: Color.fromARGB(255, 50, 51, 50),
+    surfaceContainerHighest: Color.fromARGB(255, 240, 248, 244),
+    onSurfaceVariant: Color.fromARGB(255, 94, 102, 97),
+    outline: Color.fromARGB(255, 141, 153, 146),
   );
 
   static const darkColorScheme = ColorScheme(
@@ -58,7 +58,7 @@ class AppThemeData {
       if (isHovering) {
         return lightColorScheme.primaryContainer;
       } else {
-        return lightColorScheme.surface;
+        return lightColorScheme.surfaceContainerHighest;
       }
     }
   }
@@ -67,7 +67,7 @@ class AppThemeData {
     if (isSelected) {
       return lightColorScheme.primary;
     } else {
-      return lightColorScheme.surface;
+      return lightColorScheme.surfaceContainerHighest;
     }
   }
 
@@ -78,7 +78,7 @@ class AppThemeData {
       if (isHovering) {
         return lightColorScheme.primaryContainer;
       } else {
-        return lightColorScheme.surface;
+        return lightColorScheme.surfaceContainerHighest;
       }
     }
   }

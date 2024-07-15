@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class SimpleRadio<T> extends StatefulWidget {
   final String title;
   final List<T> labels;
+  final T? initalValue;
   final double tileWidth;
   final bool noTile;
   final void Function(T newVal) selectionCallback;
@@ -12,6 +13,7 @@ class SimpleRadio<T> extends StatefulWidget {
     super.key,
     required this.title,
     required this.labels,
+    this.initalValue,
     required this.tileWidth,
     required this.selectionCallback,
     this.noTile = false,
@@ -25,7 +27,14 @@ class _SimpleRadioState<T> extends State<SimpleRadio<T>> {
   T? _selected;
   T? _hovering;
 
+  @override
+  void initState() {
+    super.initState();
+    _selected = widget.initalValue;
+  }
+
   Widget _radioTile(T elem, double width) {
+    _selected = widget.initalValue;
     bool sel = _selected != null && _selected == elem;
     bool hover = _hovering != null && _hovering == elem;
 

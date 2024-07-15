@@ -5,6 +5,8 @@ class MultiChoiceRadio<T> extends StatefulWidget {
   final String title;
   final List<T> labels;
   final List<T> labelsRequiringValue;
+  final List<T>? initialElems;
+  final String? initialValue;
   final double tileWidth;
   final double valueTileWidth;
   final String hint;
@@ -18,6 +20,8 @@ class MultiChoiceRadio<T> extends StatefulWidget {
       required this.title,
       required this.labels,
       required this.labelsRequiringValue,
+      this.initialElems,
+      this.initialValue,
       required this.tileWidth,
       required this.hint,
       required this.selectionCallback,
@@ -31,10 +35,11 @@ class MultiChoiceRadio<T> extends StatefulWidget {
 }
 
 class _MultiChoiceRadioState<T> extends State<MultiChoiceRadio<T>> {
-  final List<T> _selected = [];
+  late List<T> _selected;
   String? _value;
   T? _hovering;
   bool? _hoveringValue;
+  late TextEditingController _valueController;
 
   Widget _radioTile(T elem, double width) {
     bool sel = _selected.contains(elem);
@@ -118,12 +123,7 @@ class _MultiChoiceRadioState<T> extends State<MultiChoiceRadio<T>> {
           child: Center(
             child: TextField(
               textAlign: TextAlign.center,
-              onChanged: (text) {
-                setState(() {
-                  _value = text;
-                });
-                widget.valueCallback(_value ?? "");
-              },
+              controller: _valueController,
               style: TextStyle(
                 color: AppThemeData.textColor(required, hover),
               ),
@@ -143,6 +143,24 @@ class _MultiChoiceRadioState<T> extends State<MultiChoiceRadio<T>> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _selected = widget.initialElems ?? [];
+    _value = widget.initialValue;
+    _valueController = TextEditingController(text: _value ?? '');
+    _valueController.addListener(() {
+      _value = _valueController.text;
+      widget.valueCallback(_value ?? '');
+    });
+  }
+
+  @override
+  void dispose() {
+    _valueController.dispose();
+    super.dispose();
   }
 
   @override

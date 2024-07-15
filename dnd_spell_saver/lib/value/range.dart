@@ -7,6 +7,19 @@ enum Range {
   static const String hint = "gittata";
   static const String title = "GITTATA";
 
+  static Range? fromString(String? v) {
+    if (v == null) {
+      return null;
+    }
+
+    for (Range r in values) {
+      if (r.label == v.toLowerCase()) {
+        return r;
+      }
+    }
+    return null;
+  }
+
   @override
   String toString() => label.toUpperCase();
 }

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 class SimpleRadioWithValue<T> extends StatefulWidget {
   final String title;
   final List<T> labels;
+  final T? initialElem;
+  final String? initialValue;
   final double tileWidth;
   final bool noTile;
   final String hint;
@@ -14,6 +16,8 @@ class SimpleRadioWithValue<T> extends StatefulWidget {
       {super.key,
       required this.title,
       required this.labels,
+      this.initialElem,
+      this.initialValue,
       required this.tileWidth,
       required this.hint,
       required this.selectionCallback,
@@ -30,6 +34,7 @@ class _SimpleRadioWithValueState<T> extends State<SimpleRadioWithValue<T>> {
   T? _hovering;
   bool? _hoveringValue;
   String? _value;
+  late TextEditingController _valueController;
 
   Widget _radioTile(T elem, double width) {
     bool sel = _selected != null && _selected == elem;
@@ -139,6 +144,24 @@ class _SimpleRadioWithValueState<T> extends State<SimpleRadioWithValue<T>> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _selected = widget.initialElem;
+    _value = _selected == null ? widget.initialValue : null;
+    _valueController = TextEditingController(text: _value ?? '');
+    _valueController.addListener(() {
+      _value = _valueController.text;
+      widget.valueCallback(_value ?? '');
+    });
+  }
+
+  @override
+  void dispose() {
+    _valueController.dispose();
+    super.dispose();
   }
 
   @override

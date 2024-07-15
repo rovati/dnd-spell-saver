@@ -1,6 +1,7 @@
 import 'package:dnd_spell_saver/add_spell_screen.dart';
 import 'package:dnd_spell_saver/model/spell_list.dart';
 import 'package:dnd_spell_saver/util/screen_args.dart';
+import 'package:dnd_spell_saver/util/theme_data.dart';
 import 'package:dnd_spell_saver/widget/centered_scrollable.dart';
 import 'package:dnd_spell_saver/widget/styled_dropzone.dart';
 import 'package:flutter/material.dart';
@@ -53,9 +54,12 @@ class MainScreen extends StatelessWidget {
                     onPressed: () {
                       _newCsvAndNavigate(context);
                     },
-                    child: const Text(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: AppThemeData.lightColorScheme.primary),
+                    child: Text(
                       "NUOVO CSV",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                          color: AppThemeData.lightColorScheme.onPrimary),
                     ),
                   ),
                 ),
