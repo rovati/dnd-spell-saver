@@ -4,6 +4,7 @@ import 'package:dnd_spell_saver/util/screen_args.dart';
 import 'package:dnd_spell_saver/util/theme_data.dart';
 import 'package:dnd_spell_saver/value/area_of_effect.dart';
 import 'package:dnd_spell_saver/value/casting_time.dart';
+import 'package:dnd_spell_saver/value/class.dart';
 import 'package:dnd_spell_saver/value/components.dart';
 import 'package:dnd_spell_saver/value/duration.dart';
 import 'package:dnd_spell_saver/value/range.dart';
@@ -11,6 +12,7 @@ import 'package:dnd_spell_saver/value/saving_throw.dart';
 import 'package:dnd_spell_saver/view_spells_screen.dart';
 import 'package:dnd_spell_saver/widget/centered_scrollable.dart';
 import 'package:dnd_spell_saver/widget/multi_choice_radio.dart';
+import 'package:dnd_spell_saver/widget/multi_select_radio.dart';
 import 'package:dnd_spell_saver/widget/simple_radio.dart';
 import 'package:dnd_spell_saver/widget/simple_radio_with_value.dart';
 import 'package:dnd_spell_saver/widget/text_input.dart';
@@ -389,6 +391,16 @@ class _AddSpellPageState extends State<AddSpellPage> {
                             selectionCallback: (val) {
                               _spell.source = val;
                             },
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: MultiSelectRadio(
+                            title: Class.title,
+                            labels: Class.values,
+                            tileWidth: 50,
+                            selectionCallback: (val) {},
+                            deselectionCallback: (val) {},
                           ),
                         ),
                         // corpo

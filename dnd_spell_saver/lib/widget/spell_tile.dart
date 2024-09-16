@@ -32,7 +32,7 @@ class _SpellTileState extends State<SpellTile> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  widget.spell.title ?? '-missing title-',
+                  widget.spell.title,
                   style: const TextStyle(fontSize: 24),
                 ),
                 Text(widget.spell.sndTitle),

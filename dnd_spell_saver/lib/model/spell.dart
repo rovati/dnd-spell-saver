@@ -1,4 +1,5 @@
 import 'package:dnd_spell_saver/value/area_of_effect.dart';
+import 'package:dnd_spell_saver/value/class.dart';
 import 'package:dnd_spell_saver/value/components.dart';
 import 'package:dnd_spell_saver/value/level.dart';
 import 'package:dnd_spell_saver/value/saving_throw.dart';
@@ -24,6 +25,7 @@ class Spell {
   AreaOfEffect? aoe;
   String? aoeDim;
   SavingThrow? savingThrow;
+  List<Class> classes = [];
   String body = '';
   String atHigherLevels = '';
 
@@ -45,12 +47,13 @@ class Spell {
     this.aoe,
     this.aoeDim,
     this.savingThrow,
+    this.classes,
     this.body,
     this.atHigherLevels,
   );
 
   static Spell? fromCsvRow(List<dynamic> row) {
-    if (row.length != 17) {
+    if (row.length != 18) {
       return null;
     }
 
@@ -105,11 +108,12 @@ class Spell {
     if (savingThrow == null) {
       return null;
     }
-    String body = row[15];
+    List<Class> classes = Class.fromLabels(row[15]);
+    String body = row[16];
     if (body.isEmpty) {
       return null;
     }
-    String higherLevels = row[16];
+    String higherLevels = row[17];
 
     return Spell.fromVals(
         title,
@@ -127,6 +131,7 @@ class Spell {
         aoe,
         aoeDim,
         savingThrow,
+        classes,
         body,
         higherLevels);
   }
@@ -148,6 +153,7 @@ class Spell {
       aoe,
       aoeDim,
       savingThrow,
+      classes,
       body,
       atHigherLevels
     ];

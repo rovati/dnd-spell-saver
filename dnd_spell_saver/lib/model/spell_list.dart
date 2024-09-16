@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:csv/csv.dart';
 import 'package:dnd_spell_saver/model/spell.dart';
 import 'package:dnd_spell_saver/value/area_of_effect.dart';
+import 'package:dnd_spell_saver/value/class.dart';
 import 'package:dnd_spell_saver/value/components.dart';
 import 'package:dnd_spell_saver/value/level.dart';
 import 'package:dnd_spell_saver/value/saving_throw.dart';
@@ -76,6 +77,7 @@ class SpellList {
       AreaOfEffect.none,
       '',
       SavingThrow.none,
+      [Class.barbarian, Class.druid],
       'L\'incantatore tocca una creatura. La distanza coperta dai salti di quella creatura è triplicata finché l\'incantesimo non termina.',
       '',
     );
@@ -95,6 +97,7 @@ class SpellList {
       AreaOfEffect.none,
       '',
       SavingThrow.none,
+      [Class.monk],
       "L'incantesimo cattura parte dell'energia in arrivo, riducendone l'effetto su di te e immagazzinandola per il tuo prossimo attacco in mischia. Hai resistenza al tipo di danno innescante fino all'inizio del tuo prossimo turno (...)",
       'Il danno extra aumenta di 1d6 per ogni livello dello slot sopra il 1°',
     );
@@ -114,6 +117,7 @@ class SpellList {
       AreaOfEffect.none,
       '',
       SavingThrow.dexterity,
+      [Class.paladin],
       "L'incantatore risveglia la percezione della mortalità in una creatura situata entro gittata e che egli sia in grado di vedere. Un costrutto o un non morto è immune a queto effetto.",
       "L'incantatore può bersagliare una creatura aggiuntiva.",
     );
