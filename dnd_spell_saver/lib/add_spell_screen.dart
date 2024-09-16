@@ -376,6 +376,7 @@ class _AddSpellPageState extends State<AddSpellPage> {
                             title: SavingThrow.title,
                             labels: SavingThrow.values,
                             tileWidth: 60,
+                            initalValue: _spell.savingThrow,
                             selectionCallback: (val) {
                               _spell.savingThrow = val;
                             },
@@ -388,19 +389,26 @@ class _AddSpellPageState extends State<AddSpellPage> {
                             title: Source.title,
                             labels: Source.values,
                             tileWidth: 70,
+                            initalValue: _spell.source,
                             selectionCallback: (val) {
                               _spell.source = val;
                             },
                           ),
                         ),
+                        // classe
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: MultiSelectRadio(
                             title: Class.title,
                             labels: Class.values,
                             tileWidth: 50,
-                            selectionCallback: (val) {},
-                            deselectionCallback: (val) {},
+                            initialElems: _spell.classes,
+                            selectionCallback: (val) {
+                              _spell.classes.add(val);
+                            },
+                            deselectionCallback: (val) {
+                              _spell.classes.remove(val);
+                            },
                           ),
                         ),
                         // corpo
