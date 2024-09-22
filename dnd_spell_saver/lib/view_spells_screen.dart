@@ -26,6 +26,7 @@ class _ViewSpellsScreenState extends State<ViewSpellsPage> {
       _spellList = args.spellList;
     });
     //_spellList = SpellList.mock();
+    _spellList?.sortByName();
 
     return Scaffold(
       backgroundColor: AppThemeData.lightColorScheme.surfaceContainerHighest,

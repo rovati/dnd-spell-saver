@@ -27,6 +27,10 @@ class SpellList {
 
   int get size => spells.length;
 
+  void sortByName() {
+    spells.sort((s1, s2) => s1.title.compareTo(s2.title));
+  }
+
   Spell spellAt(int idx) => spells[idx];
 
   Future<String> exportToCsv() async {

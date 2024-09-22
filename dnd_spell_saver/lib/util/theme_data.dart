@@ -51,6 +51,9 @@ class AppThemeData {
     outline: Color(0xFFaaafb3),
   );
 
+  static Color cardColor(bool isHovering) =>
+      isHovering ? lightColorScheme.primaryContainer : Colors.white;
+
   static Color containerColor(bool isSelected, bool isHovering) {
     if (isSelected) {
       return lightColorScheme.primary;
