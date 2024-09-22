@@ -1,4 +1,5 @@
 import 'package:dnd_spell_saver/model/spell.dart';
+import 'package:dnd_spell_saver/util/theme_data.dart';
 import 'package:flutter/material.dart';
 
 class SpellTile extends StatefulWidget {
@@ -16,12 +17,8 @@ class SpellTile extends StatefulWidget {
 class _SpellTileState extends State<SpellTile> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(width: 2, color: Colors.grey),
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-      ),
+    return Card(
+      elevation: 2,
       child: Padding(
         padding: const EdgeInsets.all(5),
         child: Stack(
@@ -36,15 +33,15 @@ class _SpellTileState extends State<SpellTile> {
                   style: const TextStyle(fontSize: 24),
                 ),
                 Text(widget.spell.sndTitle),
-                Text(widget.spell.source != null
-                    ? widget.spell.source!.label
-                    : '-missing source-')
               ],
             ),
             Align(
               alignment: Alignment.topLeft,
               child: IconButton(
-                icon: const Icon(Icons.delete_outline),
+                icon: const Icon(
+                  Icons.delete_outline,
+                  color: Colors.red,
+                ),
                 onPressed: () {
                   widget.deletionCallback(widget.spell);
                 },
@@ -53,7 +50,10 @@ class _SpellTileState extends State<SpellTile> {
             Align(
               alignment: Alignment.topRight,
               child: IconButton(
-                icon: const Icon(Icons.edit_outlined),
+                icon: Icon(
+                  Icons.edit_outlined,
+                  color: AppThemeData.lightColorScheme.primary,
+                ),
                 onPressed: () {
                   widget.editCallback(widget.spell);
                 },

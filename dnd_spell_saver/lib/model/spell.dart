@@ -207,6 +207,9 @@ class Spell {
     if (savingThrow == null) {
       errorFields.add('\'TIRO SLAVEZZA\' non è selezionato.');
     }
+    if (classes.isEmpty) {
+      errorFields.add('\'CLASSE\' deve avere almeno una selezione.');
+    }
     if (body.isEmpty) {
       errorFields.add('\'DESCRIZIONE\' è vuoto.');
     }

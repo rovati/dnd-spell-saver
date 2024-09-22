@@ -34,7 +34,6 @@ class _SimpleRadioState<T> extends State<SimpleRadio<T>> {
   }
 
   Widget _radioTile(T elem, double width) {
-    _selected = widget.initalValue;
     bool sel = _selected != null && _selected == elem;
     bool hover = _hovering != null && _hovering == elem;
 

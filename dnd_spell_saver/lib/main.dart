@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       themeMode: ThemeMode.light,
-      initialRoute: ViewSpellsPage.routeName,
+      initialRoute: MainScreen.routeName,
       routes: {
         MainScreen.routeName: (context) => const MainScreen(),
         AddSpellPage.routeName: (context) => const AddSpellPage(),

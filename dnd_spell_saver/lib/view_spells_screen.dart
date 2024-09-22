@@ -21,12 +21,11 @@ class _ViewSpellsScreenState extends State<ViewSpellsPage> {
 
   @override
   Widget build(BuildContext context) {
-    /*
     final args = ModalRoute.of(context)!.settings.arguments as ScreenArguments;
     setState(() {
       _spellList = args.spellList;
-    });*/
-    _spellList = SpellList.mock();
+    });
+    //_spellList = SpellList.mock();
 
     return Scaffold(
       backgroundColor: AppThemeData.lightColorScheme.surfaceContainerHighest,

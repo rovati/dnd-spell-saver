@@ -36,7 +36,7 @@ class AddSpellPage extends StatefulWidget {
 class _AddSpellPageState extends State<AddSpellPage> {
   SpellList? _spellList;
 
-  late Spell _spell;
+  Spell? _spell;
   late bool _isEditing;
   late TextEditingController _titleController;
   late TextEditingController _enTitleController;
@@ -44,45 +44,48 @@ class _AddSpellPageState extends State<AddSpellPage> {
   late TextEditingController _higherLevelsController;
 
   void _addSpell() {
-    _spell.title = _titleController.value.text;
-    _spell.sndTitle = _enTitleController.value.text;
-    _spell.body = _bodyController.value.text;
-    _spell.atHigherLevels = _higherLevelsController.value.text;
+    if (_spell != null) {
+      _spell!.title = _titleController.value.text;
+      _spell!.sndTitle = _enTitleController.value.text;
+      _spell!.body = _bodyController.value.text;
+      _spell!.atHigherLevels = _higherLevelsController.value.text;
 
-    var (ok, errors) = _spell.validate();
+      var (ok, errors) = _spell!.validate();
 
-    if (!ok) {
-      _showErrorDialog(errors);
-      return;
+      if (!ok) {
+        _showErrorDialog(errors);
+      } else {
+        _spellList!.addSpell(_spell!);
+        _showSuccessDialog('Incantesimo aggiunto alla lista.', 'PROSSIMO').then(
+          (value) => Navigator.popAndPushNamed(
+            context,
+            AddSpellPage.routeName,
+            arguments: ScreenArguments(
+              _spellList!,
+            ),
+          ),
+        );
+      }
     }
-
-    _spellList!.addSpell(_spell);
-    _showSuccessDialog('Incantesimo aggiunto alla lista.', 'PROSSIMO').then(
-      (value) => Navigator.popAndPushNamed(
-        context,
-        AddSpellPage.routeName,
-        arguments: ScreenArguments(
-          _spellList!,
-        ),
-      ),
-    );
   }
 
   void _editSpell() {
-    _spell.title = _titleController.value.text;
-    _spell.sndTitle = _enTitleController.value.text;
-    _spell.body = _bodyController.value.text;
-    _spell.atHigherLevels = _higherLevelsController.value.text;
+    if (_spell != null) {
+      _spell!.title = _titleController.value.text;
+      _spell!.sndTitle = _enTitleController.value.text;
+      _spell!.body = _bodyController.value.text;
+      _spell!.atHigherLevels = _higherLevelsController.value.text;
 
-    var (ok, errors) = _spell.validate();
+      var (ok, errors) = _spell!.validate();
 
-    if (!ok) {
-      _showErrorDialog(errors);
-      return;
+      if (!ok) {
+        _showErrorDialog(errors);
+      } else {
+        _showSuccessDialog('Incantesimo modificato.', 'OK').then(
+          (value) => Navigator.pop(context),
+        );
+      }
     }
-    _showSuccessDialog('Incantesimo modificato.', 'OK').then(
-      (value) => Navigator.pop(context),
-    );
   }
 
   void _exportCsv() {
@@ -140,7 +143,7 @@ class _AddSpellPageState extends State<AddSpellPage> {
             TextButton(
               child: const Text('CHIUDI'),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(_spell);
               },
             ),
           ],
@@ -155,13 +158,13 @@ class _AddSpellPageState extends State<AddSpellPage> {
     super.didChangeDependencies();
     final args = ModalRoute.of(context)!.settings.arguments as ScreenArguments;
     _spellList = args.spellList;
-    _spell = args.spell ?? Spell();
+    _spell ??= args.spell ?? Spell();
     _isEditing = args.spell != null;
-    _titleController = TextEditingController(text: _spell.title);
-    _enTitleController = TextEditingController(text: _spell.sndTitle);
-    _bodyController = TextEditingController(text: _spell.body);
+    _titleController = TextEditingController(text: _spell!.title);
+    _enTitleController = TextEditingController(text: _spell!.sndTitle);
+    _bodyController = TextEditingController(text: _spell!.body);
     _higherLevelsController =
-        TextEditingController(text: _spell.atHigherLevels);
+        TextEditingController(text: _spell!.atHigherLevels);
   }
 
   @override
@@ -206,10 +209,10 @@ class _AddSpellPageState extends State<AddSpellPage> {
                           child: SimpleRadio<SpellLevel>(
                             title: SpellLevel.title,
                             labels: SpellLevel.values,
-                            initalValue: _spell.level,
+                            initalValue: _spell?.level,
                             tileWidth: 50,
                             selectionCallback: (val) {
-                              _spell.level = val;
+                              _spell?.level = val;
                             },
                           ),
                         ),
@@ -219,10 +222,10 @@ class _AddSpellPageState extends State<AddSpellPage> {
                           child: SimpleRadio<School>(
                             title: School.title,
                             labels: School.values,
-                            initalValue: _spell.school,
+                            initalValue: _spell?.school,
                             tileWidth: 50,
                             selectionCallback: (val) {
-                              _spell.school = val;
+                              _spell?.school = val;
                             },
                           ),
                         ),
@@ -243,10 +246,10 @@ class _AddSpellPageState extends State<AddSpellPage> {
                                   ),
                                 ),
                                 Checkbox(
-                                  value: _spell.concentration,
+                                  value: _spell?.concentration,
                                   onChanged: (val) {
                                     setState(() {
-                                      _spell.concentration = val!;
+                                      _spell?.concentration = val!;
                                     });
                                   },
                                 ),
@@ -258,10 +261,10 @@ class _AddSpellPageState extends State<AddSpellPage> {
                                   ),
                                 ),
                                 Checkbox(
-                                  value: _spell.ritual,
+                                  value: _spell?.ritual,
                                   onChanged: (val) {
                                     setState(() {
-                                      _spell.ritual = val!;
+                                      _spell?.ritual = val!;
                                     });
                                   },
                                 ),
@@ -276,15 +279,15 @@ class _AddSpellPageState extends State<AddSpellPage> {
                             title: CastingTime.title,
                             labels: CastingTime.values,
                             initialElem:
-                                CastingTime.fromString(_spell.castingTime),
-                            initialValue: _spell.castingTime,
+                                CastingTime.fromString(_spell?.castingTime),
+                            initialValue: _spell?.castingTime,
                             tileWidth: 90,
                             hint: CastingTime.hint,
                             selectionCallback: (val) {
-                              _spell.castingTime = val.label;
+                              _spell?.castingTime = val.label;
                             },
                             valueCallback: (strVal) {
-                              _spell.castingTime = strVal;
+                              _spell?.castingTime = strVal;
                             },
                           ),
                         ),
@@ -294,15 +297,15 @@ class _AddSpellPageState extends State<AddSpellPage> {
                           child: SimpleRadioWithValue<Range>(
                             title: Range.title,
                             labels: Range.values,
-                            initialElem: Range.fromString(_spell.range),
-                            initialValue: _spell.range,
+                            initialElem: Range.fromString(_spell?.range),
+                            initialValue: _spell?.range,
                             tileWidth: 150,
                             hint: Range.hint,
                             selectionCallback: (val) {
-                              _spell.range = val.label;
+                              _spell?.range = val.label;
                             },
                             valueCallback: (strVal) {
-                              _spell.range = strVal;
+                              _spell?.range = strVal;
                             },
                           ),
                         ),
@@ -312,15 +315,15 @@ class _AddSpellPageState extends State<AddSpellPage> {
                           child: SimpleRadioWithValue<Duration>(
                             title: Duration.title,
                             labels: Duration.values,
-                            initialElem: Duration.fromString(_spell.duration),
-                            initialValue: _spell.duration,
+                            initialElem: Duration.fromString(_spell?.duration),
+                            initialValue: _spell?.duration,
                             tileWidth: 220,
                             hint: Duration.hint,
                             selectionCallback: (val) {
-                              _spell.duration = val.label;
+                              _spell?.duration = val.label;
                             },
                             valueCallback: (strVal) {
-                              _spell.duration = strVal;
+                              _spell?.duration = strVal;
                             },
                           ),
                         ),
@@ -332,18 +335,18 @@ class _AddSpellPageState extends State<AddSpellPage> {
                             labels: Component.values,
                             labelsRequiringValue:
                                 Component.labelsRequiringValue(),
-                            initialElems: _spell.components,
-                            initialValue: _spell.materialC,
+                            initialElems: _spell?.components,
+                            initialValue: _spell?.materialC,
                             tileWidth: 30,
                             hint: Component.hint,
                             selectionCallback: (val) {
-                              _spell.components.add(val);
+                              _spell?.components.add(val);
                             },
                             deselectionCallback: (val) {
-                              _spell.components.remove(val);
+                              _spell?.components.remove(val);
                             },
                             valueCallback: (strVal) {
-                              _spell.materialC = strVal;
+                              _spell?.materialC = strVal;
                             },
                             valueTileWidth: 370,
                           ),
@@ -356,16 +359,16 @@ class _AddSpellPageState extends State<AddSpellPage> {
                             labels: AreaOfEffect.values,
                             labelsRequiringValue:
                                 AreaOfEffect.labelsRequiringValue(),
-                            initialElem: _spell.aoe,
-                            initalValue: _spell.aoeDim,
+                            initialElem: _spell?.aoe,
+                            initalValue: _spell?.aoeDim,
                             tileWidth: 70,
                             valueTileWidth: 100,
                             hint: AreaOfEffect.hint,
                             selectionCallback: (val) {
-                              _spell.aoe = val;
+                              _spell?.aoe = val;
                             },
                             valueCallback: (strVal) {
-                              _spell.aoeDim = strVal;
+                              _spell?.aoeDim = strVal;
                             },
                           ),
                         ),
@@ -376,9 +379,9 @@ class _AddSpellPageState extends State<AddSpellPage> {
                             title: SavingThrow.title,
                             labels: SavingThrow.values,
                             tileWidth: 60,
-                            initalValue: _spell.savingThrow,
+                            initalValue: _spell?.savingThrow,
                             selectionCallback: (val) {
-                              _spell.savingThrow = val;
+                              _spell?.savingThrow = val;
                             },
                           ),
                         ),
@@ -389,9 +392,9 @@ class _AddSpellPageState extends State<AddSpellPage> {
                             title: Source.title,
                             labels: Source.values,
                             tileWidth: 70,
-                            initalValue: _spell.source,
+                            initalValue: _spell?.source,
                             selectionCallback: (val) {
-                              _spell.source = val;
+                              _spell?.source = val;
                             },
                           ),
                         ),
@@ -402,12 +405,12 @@ class _AddSpellPageState extends State<AddSpellPage> {
                             title: Class.title,
                             labels: Class.values,
                             tileWidth: 50,
-                            initialElems: _spell.classes,
+                            initialElems: _spell?.classes,
                             selectionCallback: (val) {
-                              _spell.classes.add(val);
+                              _spell?.classes.add(val);
                             },
                             deselectionCallback: (val) {
-                              _spell.classes.remove(val);
+                              _spell?.classes.remove(val);
                             },
                           ),
                         ),
